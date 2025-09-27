@@ -1,18 +1,18 @@
-Desenvolvedor de Software
+# Desenvolvedor de Software
 
 Competências Técnicas: C, Python, Unix/Linux, Docker, HTML, CSS, JavaScript, Node.js, Spring Boot, React, Pandas, PyAutoGUI, Git, APIs RESTful, Excel, Pacote Office
 
-#Formação Acadêmica
+# Formação Acadêmica
 
 Bacharelado em Engenharia da Computação | Universidade de Pernambuco (UPE) (2024 – em andamento, conclusão prevista em 2029)
 
 Ensino Médio | Colégio Cognitivo (2020 – 2023)
 
-#Certificações
+# Certificações
 
 Curso de Inglês – Britanic (Conclusão 2022)
 
-##Experiências
+## Experiências
 (Projetos acadêmicos e pessoais com experiência prática)
 
 Desenvolvedor – Sistemas e Automação
@@ -27,7 +27,7 @@ Desenvolvimento Web full stack com HTML, CSS, JavaScript, Node.js, Spring Boot e
 
 Familiaridade com ambientes Linux/Unix e práticas DevOps em pequena escala
 
-##Projetos
+## Projetos
 
 Sistema de Controle de Inventário com Interface Gráfica
 
@@ -49,7 +49,7 @@ Automação de backups periódicos e compactação com Bash
 
 Envio automatizado para Google Drive
 
-##Idiomas
+## Idiomas
 
 Português: Nativo
 
@@ -57,7 +57,7 @@ Inglês: Fluente
 
 Espanhol: Básico
 
-##Competências Comportamentais (Soft Skills)
+## Competências Comportamentais (Soft Skills)
 
 Trabalho em equipe
 
