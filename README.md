@@ -4,7 +4,7 @@ Competências Técnicas: C, Python, Unix/Linux, Docker, HTML, CSS, JavaScript, N
 
 # Formação Acadêmica
 
-Bacharelado em Engenharia da Computação | Universidade de Pernambuco (UPE) (2024 – em andamento, conclusão prevista em 2029)
+Bacharelado em **Engenharia da Computação** | Universidade de Pernambuco (**UPE**) (2024 – em andamento, conclusão prevista em 2029)
 
 Ensino Médio | Colégio Cognitivo (2020 – 2023)
 
@@ -15,21 +15,19 @@ Curso de Inglês – Britanic (Conclusão 2022)
 ## Experiências
 (Projetos acadêmicos e pessoais com experiência prática)
 
-Desenvolvedor – Sistemas e Automação
+Construção de aplicações em C com foco em **algoritmos otimizados e estruturas de dados**
 
-Construção de aplicações em C com foco em algoritmos otimizados e estruturas de dados
+Automação de fluxos com **n8n**, APIs REST, Replit e conteinerização com **Docker**
 
-Automação de fluxos com n8n, APIs REST, Replit e conteinerização com Docker
+Criação de **scripts em Python** para automação usando Pandas e PyAutoGUI
 
-Criação de scripts em Python para automação usando Pandas e PyAutoGUI
+Desenvolvimento **Web full stack** com HTML, CSS, JavaScript, Node.js, Spring Boot e React
 
-Desenvolvimento Web full stack com HTML, CSS, JavaScript, Node.js, Spring Boot e React
-
-Familiaridade com ambientes Linux/Unix e práticas DevOps em pequena escala
+Familiaridade com ambientes **Linux/Unix** e práticas DevOps em pequena escala
 
 ## Projetos
 
-Sistema de Controle de Inventário com Interface Gráfica
+# Sistema de Controle de Inventário com Interface Gráfica
 
 Desenvolvido em C com biblioteca GTK para interface gráfica
 
@@ -37,13 +35,13 @@ Implementação de cadastro de usuários e controle de chaves integrados ao Exce
 
 Foco em manipulação de arquivos, desenvolvimento de GUIs em C e dados persistentes
 
-Bot para Discord com Automação em n8n
+# Bot para Discord com Automação em n8n
 
 Automatização do envio de mensagens e integração com APIs externas
 
 Funções em JavaScript para tratamento de dados, formatação de mensagens e lógica condicional avançada
 
-Automação de Backups com Rclone e Cron (Bash no Linux)
+# Automação de Backups com Rclone e Cron (Bash no Linux)
 
 Automação de backups periódicos e compactação com Bash
 
