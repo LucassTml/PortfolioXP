@@ -24,7 +24,7 @@ Criação de **scripts em Python** para automação usando Pandas e PyAutoGUI
 Desenvolvimento **Web full stack** com HTML, CSS, JavaScript, Node.js, Spring Boot e React
 
 Familiaridade com ambientes **Linux/Unix** e práticas DevOps em pequena escala
-
+<br><br>
 # Projetos
 
 ### Sistema de Controle de Inventário com Interface Gráfica
@@ -46,7 +46,7 @@ Funções em JavaScript para tratamento de dados, formatação de mensagens e l�
 Automação de backups periódicos e compactação com Bash
 
 Envio automatizado para Google Drive
-
+<br><br>
 ## Idiomas
 
 Português: Nativo
