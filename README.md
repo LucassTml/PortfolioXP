@@ -8,11 +8,12 @@ Bacharelado em **Engenharia da Computação** | Universidade de Pernambuco (**UP
 
 Ensino Médio | Colégio Cognitivo (2020 – 2023)
 
-# Certificações
+## Certificações
 
 Curso de Inglês – Britanic (Conclusão 2022)
 
-## Experiências
+
+## Habilidades Técnicas
 (Projetos acadêmicos e pessoais com experiência prática)
 
 Construção de aplicações em C com foco em **algoritmos otimizados e estruturas de dados**
@@ -25,9 +26,9 @@ Desenvolvimento **Web full stack** com HTML, CSS, JavaScript, Node.js, Spring Bo
 
 Familiaridade com ambientes **Linux/Unix** e práticas DevOps em pequena escala
 
-## Projetos
+# Projetos
 
-# Sistema de Controle de Inventário com Interface Gráfica
+### Sistema de Controle de Inventário com Interface Gráfica
 
 Desenvolvido em C com biblioteca GTK para interface gráfica
 
@@ -35,13 +36,13 @@ Implementação de cadastro de usuários e controle de chaves integrados ao Exce
 
 Foco em manipulação de arquivos, desenvolvimento de GUIs em C e dados persistentes
 
-# Bot para Discord com Automação em n8n
+### Bot para Discord com Automação em n8n
 
 Automatização do envio de mensagens e integração com APIs externas
 
 Funções em JavaScript para tratamento de dados, formatação de mensagens e lógica condicional avançada
 
-# Automação de Backups com Rclone e Cron (Bash no Linux)
+### Automação de Backups com Rclone e Cron (Bash no Linux)
 
 Automação de backups periódicos e compactação com Bash
 
