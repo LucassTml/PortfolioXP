@@ -1,4 +1,4 @@
-# Desenvolvedor de Software
+# Engenheiro de Software
 
 Competências Técnicas: C, Python, Unix/Linux, Docker, HTML, CSS, JavaScript, Node.js, Spring Boot, React, Pandas, PyAutoGUI, Git, APIs RESTful, Excel, Pacote Office
 
