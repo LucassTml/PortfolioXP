@@ -11,8 +11,7 @@ Ensino Médio | Colégio Cognitivo (2020 – 2023)
 ## Certificações
 
 Curso de Inglês – Britanic (Conclusão 2022)
-#
-#
+
 ## Habilidades Técnicas
 (Projetos acadêmicos e pessoais com experiência prática)
 
