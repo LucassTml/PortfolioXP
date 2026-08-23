@@ -37,26 +37,13 @@
   }
 
   /* ---------- DESKTOP / BLISS-STYLE BACKDROP ---------- */
+
+  /* Any wallpaper or image url down here */
   #desktop{
     position:fixed; inset:0; bottom:44px;
-    background:
-      radial-gradient(ellipse 60% 40% at 50% -10%, #8FCBFF 0%, transparent 60%),
-      linear-gradient(180deg, #3E7FD0 0%, #6FB3EC 42%, #BFE6C9 62%, #4B9E3F 66%, #2E6E22 100%);
+    background-image:url("https://images2.alphacoders.com/941/thumb-1920-941898.jpg");
+    background-size:cover; background-position:center; background-repeat:no-repeat;
     overflow:hidden;
-    background-size:cover; background-position:center;
-  }
-  #desktop::before{
-    content:"";
-    position:absolute; left:-10%; right:-10%; bottom:-10%; height:46%;
-    background:radial-gradient(120% 100% at 50% 120%, #6FCB4E 0%, #2E6E22 70%);
-    border-radius:50% 50% 0 0 / 100% 100% 0 0;
-  }
-  #desktop::after{
-    content:"";
-    position:absolute; left:-20%; right:-20%; bottom:-18%; height:38%;
-    background:radial-gradient(120% 100% at 40% 130%, #86D95E 0%, #3A8A2C 75%);
-    border-radius:50% 50% 0 0 / 100% 100% 0 0;
-    opacity:.85;
   }
   #desktop.custom-bg{ background:#000; }
   #desktop.custom-bg::before, #desktop.custom-bg::after{ content:none; }
@@ -118,6 +105,7 @@
   }
   .window.hidden{ transform:scale(.7) translateY(40px); opacity:0; pointer-events:none; }
   .window.closing{ transform:scale(.55) translateY(140px); opacity:0; }
+  .window.interacting{ transition:none !important; }
   .window.active{ box-shadow:0 22px 54px rgba(0,0,0,.45), 0 2px 0 rgba(255,255,255,.4) inset;}
   .window.maximized{
     left:0 !important; top:0 !important; width:100% !important;
@@ -192,6 +180,22 @@
   .game-body{ padding:10px 12px 12px; background:#111; display:flex; flex-direction:column; }
   .game-info{ color:#cfe6ff; font-size:11px; font-family:'Consolas',monospace; margin:0 0 6px; opacity:.85;}
   canvas.game-canvas{ display:block; width:100%; height:auto; background:#05030f; border-radius:4px; border:1px solid #333; image-rendering:pixelated; }
+  .game-canvas-wrap{ position:relative; }
+  .powerup-overlay{
+    position:absolute; inset:0; background:rgba(5,5,15,.9); border-radius:4px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:10px; padding:14px; text-align:center;
+  }
+  .powerup-title{ color:#FFD166; font-family:'Consolas',monospace; font-size:12.5px; }
+  .powerup-options{ display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
+  .powerup-btn{
+    background:linear-gradient(180deg,#5B9CF6,#245EDC); color:#fff; border:1px solid #123E9E;
+    border-radius:6px; padding:8px 10px; font-size:11px; font-family:'Segoe UI',sans-serif;
+    cursor:pointer; max-width:120px; transition:transform .1s ease;
+  }
+  .powerup-btn:hover{ filter:brightness(1.15); }
+  .powerup-btn:active{ transform:scale(.95); }
+  .powerup-btn b{ display:block; font-size:12.5px; margin-bottom:3px; }
 
   /* ---------- TERMINAL ---------- */
   .term-body{ padding:0; background:#0C0C0C; display:flex; flex-direction:column; }
@@ -234,6 +238,26 @@
   #sort-bars .bar{ flex:1 1 0; background:#5B9CF6; border-radius:2px 2px 0 0; transition:background .1s ease; }
   #sort-bars .bar.active{ background:#F45B69; }
   #sort-bars .bar.done{ background:#6FCF3C; }
+
+  /* ---------- MAZE / PATHFINDING VISUALIZER ---------- */
+  .maze-toolbar{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:10px; }
+  .maze-toolbar select, .maze-toolbar button{
+    font-family:'Segoe UI',sans-serif; font-size:12.5px; padding:5px 10px;
+    border-radius:5px; border:1px solid #97A6C4; background:#fff; cursor:pointer;
+  }
+  .maze-toolbar button{ background:linear-gradient(180deg,#5B9CF6,#245EDC); color:#fff; border-color:#123E9E; }
+  .maze-toolbar button:disabled{ opacity:.5; cursor:not-allowed; }
+  .maze-toolbar .maze-note{ font-size:11px; color:var(--ink-soft); }
+  #maze-grid{
+    display:grid; gap:1px; background:#1b1b1b; padding:4px; border-radius:6px;
+  }
+  .maze-cell{ aspect-ratio:1; background:#dfe7f5; }
+  .maze-cell.wall{ background:#1b1b1b; }
+  .maze-cell.visited{ background:#8fb6ea; }
+  .maze-cell.frontier{ background:#c9a6f6; }
+  .maze-cell.start{ background:#6FCF3C; }
+  .maze-cell.end{ background:#F45B69; }
+  .maze-cell.solved{ background:#FFD166; }
 
   /* ---------- TASKBAR ---------- */
   #taskbar{
@@ -359,6 +383,7 @@
     .window{ left:4vw !important; right:4vw; width:92vw !important; top:36px !important; height:70vh !important; }
     .resize-handle{display:none;}
     #theme-toggle{ bottom:50px; right:8px; }
+    #sound-toggle{ bottom:92px; right:8px; }
   }
 
   /* ============================================================
@@ -373,6 +398,14 @@
     font-family:'Segoe UI',sans-serif; font-size:11px; font-weight:700; color:#333;
     user-select:none;
   }
+  #sound-toggle{
+    position:fixed; right:14px; bottom:98px; z-index:150;
+    width:34px; height:34px; border-radius:50%;
+    background:rgba(255,255,255,.88); backdrop-filter:blur(8px);
+    border:1px solid rgba(255,255,255,.7); box-shadow:0 8px 20px rgba(0,0,0,.35);
+    cursor:pointer; font-size:15px; display:flex; align-items:center; justify-content:center;
+  }
+  #sound-toggle:hover{ box-shadow:0 10px 26px rgba(0,0,0,.42); }
   #theme-toggle:hover{ box-shadow:0 10px 26px rgba(0,0,0,.42); }
   .tt-label{ opacity:.5; transition:opacity .15s ease; }
   .tt-track{ width:34px; height:18px; border-radius:10px; background:#2E8B1D; position:relative; transition:background .2s ease; flex:0 0 auto; }
@@ -501,6 +534,10 @@
       <div class="icon-glyph" style="background:linear-gradient(160deg,#5BC8F6,#0A5EA6);">📊</div>
       <div class="icon-label">Ordenação</div>
     </div>
+    <div class="icon" tabindex="0" data-win="labirinto">
+      <div class="icon-glyph" style="background:linear-gradient(160deg,#F6935B,#A64F0A);">🧩</div>
+      <div class="icon-label">Labirinto</div>
+    </div>
   </div>
 </div>
 
@@ -512,7 +549,7 @@
   </div>
   <div class="win-body">
     <h2>Lucas Melo</h2>
-    <p>Estudante de Engenharia da Computação na UPE, apaixonado por entender como as coisas funcionam por dentro — do bit ao sistema completo.</p>
+    <p>Estudante de Engenharia da Computação na UPE.</p>
     <p>Desenvolvedor com experiência em <strong>C</strong> e <strong>Python</strong>, conhecimento em ambientes Unix e prática em desenvolvimento web, tanto front quanto back-end. Também lida com conteinerização de ambientes usando ferramentas como Docker.</p>
     <p>Sua paixão é a engenharia do processo: aprimorar pequenos aplicativos, construir sistemas mais complexos e sempre buscar entender o funcionamento de cada etapa. Está constantemente explorando novas tecnologias e abordagens para entregar resultados modernos, eficientes e otimizados.</p>
     <div class="field">
@@ -609,7 +646,13 @@
   </div>
   <div class="win-body game-body">
     <p class="game-info">← → ou A/D para mover · Espaço para atirar/reiniciar</p>
-    <canvas class="game-canvas" id="canvas-invaders" width="380" height="280"></canvas>
+    <div class="game-canvas-wrap">
+      <canvas class="game-canvas" id="canvas-invaders" width="380" height="280"></canvas>
+      <div class="powerup-overlay" id="invaders-powerup" style="display:none;">
+        <div class="powerup-title">Fase concluída! Escolha um power-up:</div>
+        <div class="powerup-options" id="invaders-powerup-options"></div>
+      </div>
+    </div>
   </div>
   <div class="resize-handle"></div>
 </div>
@@ -666,6 +709,28 @@ Digite "help" para ver os comandos disponíveis (ls, neofetch, whoami...).
   <div class="resize-handle"></div>
 </div>
 
+<div class="window hidden" id="win-labirinto" style="left:18%; top:8%; width:460px;">
+  <div class="titlebar" data-drag>
+    <span class="t-icon">🧩</span><span class="t-title">Labirinto — Busca de Caminhos</span>
+    <span class="t-btn" data-act="min">_</span><span class="t-btn" data-act="max">□</span><span class="t-btn close" data-act="close">✕</span>
+  </div>
+  <div class="win-body">
+    <div class="maze-toolbar">
+      <select id="maze-algo">
+        <option value="bfs">Busca em Largura (BFS)</option>
+        <option value="dfs">Busca em Profundidade (DFS)</option>
+        <option value="dijkstra">Dijkstra</option>
+        <option value="astar" selected>A* (A-estrela)</option>
+      </select>
+      <button id="maze-new">🔀 Novo labirinto</button>
+      <button id="maze-search">▶️ Buscar</button>
+      <span class="maze-note">Roxo = visitado · Amarelo = caminho final</span>
+    </div>
+    <div id="maze-grid"></div>
+  </div>
+  <div class="resize-handle"></div>
+</div>
+
 <!-- TASKBAR -->
 <div id="taskbar">
   <div id="start-btn" tabindex="0"><span class="flag">🪟</span><span class="start-label">iniciar</span></div>
@@ -687,6 +752,7 @@ Digite "help" para ver os comandos disponíveis (ls, neofetch, whoami...).
     <li data-win="hexagon"><span class="g">⬡</span>Hexágono</li>
     <li data-win="terminal"><span class="g">&gt;_</span>Terminal</li>
     <li data-win="ordenacao"><span class="g">📊</span>Ordenação</li>
+    <li data-win="labirinto"><span class="g">🧩</span>Labirinto</li>
     <li class="divider"></li>
     <li class="shutdown" id="shutdown-item"><span class="g">⏻</span>Encerrar sessão…</li>
   </ul>
@@ -711,6 +777,7 @@ Digite "help" para ver os comandos disponíveis (ls, neofetch, whoami...).
 </div>
 
 <!-- TEMA TOGGLE (XP <-> Vista/Aero) -->
+<button id="sound-toggle" aria-pressed="true" title="Ativar/desativar sons">🔊</button>
 <button id="theme-toggle" aria-pressed="false" title="Alternar entre visual XP e Vista/Aero">
   <span class="tt-label tt-xp">XP</span>
   <span class="tt-track"><span class="tt-knob"></span></span>
@@ -730,8 +797,8 @@ Digite "help" para ver os comandos disponíveis (ls, neofetch, whoami...).
   const WALLPAPER_IMAGE = null;
 
   // Cole aqui o link do seu GitHub e do seu LinkedIn.
-  const GITHUB_URL = "";     // ex: "https://github.com/SEU-USUARIO"
-  const LINKEDIN_URL = "";   // ex: "https://www.linkedin.com/in/SEU-USUARIO"
+  const GITHUB_URL = "https://github.com/LucassTml";     // ex: "https://github.com/SEU-USUARIO"
+  const LINKEDIN_URL = "https://www.linkedin.com/in/lucas-eduardo-melo-tenorio-05326a311/";   // ex: "https://www.linkedin.com/in/SEU-USUARIO"
 
   // Ajustes dos jogos — mexa nesses números para deixar mais fácil/difícil.
   const GAME_CONFIG = {
@@ -739,23 +806,40 @@ Digite "help" para ver os comandos disponíveis (ls, neofetch, whoami...).
       playerSpeed: 4.2,          // velocidade horizontal da nave do jogador
       bulletSpeed: 6,            // velocidade do tiro do jogador (subindo)
       enemyBulletSpeed: 4.2,     // velocidade do tiro inimigo (descendo)
-      invaderHorizontalSpeed: 1.1, // velocidade lateral dos invasores
+      invaderHorizontalSpeed: 1.1, // velocidade lateral base dos invasores
       invaderDescentStep: 3,     // quanto os invasores descem a cada vez que batem na borda (menor = mais fácil)
       enemyShootChance: 0.02,    // chance por frame de um invasor atirar
-      rows: 4,
-      cols: 8,
-      lives: 3
+      lives: 3,
+      // Uma fase por item da lista — pode adicionar/remover fases ou mudar os números.
+      levels: [
+        { rows:3, cols:7, speedMultiplier:1.0  },
+        { rows:4, cols:8, speedMultiplier:1.25 },
+        { rows:5, cols:9, speedMultiplier:1.5  }
+      ],
+      // Ao terminar uma fase (exceto a última), o jogador escolhe 1 destes 3 sorteados.
+      powerUps: [
+        { id:'vida_extra',  label:'+1 Vida',        desc:'Ganha uma vida extra.' },
+        { id:'tiro_duplo',  label:'Tiro Duplo',      desc:'Atira dois projéteis por vez.' },
+        { id:'tiro_rapido', label:'Tiro Rápido',     desc:'O tiro sobe mais rápido.' },
+        { id:'nave_agil',   label:'Nave Ágil',       desc:'Aumenta a velocidade da nave.' },
+        { id:'escudo',      label:'Escudo',          desc:'Bloqueia o próximo tiro inimigo.' }
+      ]
     },
     hexagon: {
-      playerRotateSpeed: 3.4,    // velocidade de rotação do jogador
-      baseSpeed: 150,            // velocidade inicial das paredes se aproximando (maior = mais rápido)
-      speedRamp: 10,             // o quanto a velocidade aumenta por segundo (dificuldade progressiva)
+      playerRotateSpeed: 7,    // velocidade de rotação do jogador (a "bola")
+      baseSpeed: 170,            // velocidade inicial das paredes se aproximando (maior = mais rápido)
+      speedRamp: 18,             // o quanto a velocidade aumenta por segundo (dificuldade progressiva)
       gapWidth: Math.PI/3.0,     // tamanho do vão em cada parede (em radianos)
       cosmeticRotationSpeed: 0.25 // rotação apenas visual do hexágono central (não afeta colisão)
     },
     sort: {
-      arraySize: 32,     // quantidade de barras
+      arraySize: 64,     // quantidade de barras
       stepDelayMs: 30    // pausa entre cada passo da animação (menor = mais rápido)
+    },
+    maze: {
+      cols: 25,            // precisa ser ÍMPAR
+      rows: 23,            // precisa ser ÍMPAR
+      stepDelayMs: 18       // pausa entre cada passo da busca (menor = mais rápido)
     }
   };
 
@@ -785,9 +869,66 @@ Digite "help" para ver os comandos disponíveis (ls, neofetch, whoami...).
     desktop.style.backgroundRepeat = 'repeat';
   }
 
+  /* ---------------- SONS (sintetizados, sem arquivos externos) ---------------- */
+  const SFX = (function(){
+    let ctx, enabled = true;
+    function ensureCtx(){
+      if(!ctx){ try{ ctx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} }
+      if(ctx && ctx.state === 'suspended'){ ctx.resume().catch(()=>{}); }
+      return ctx;
+    }
+    function tone(freq, dur, type, vol, delay){
+      if(!enabled) return;
+      const c = ensureCtx();
+      if(!c) return;
+      try{
+        const t0 = c.currentTime + (delay||0);
+        const osc = c.createOscillator();
+        const gain = c.createGain();
+        osc.type = type||'sine';
+        osc.frequency.setValueAtTime(freq, t0);
+        gain.gain.setValueAtTime(vol||0.08, t0);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t0+dur);
+        osc.connect(gain); gain.connect(c.destination);
+        osc.start(t0); osc.stop(t0+dur+0.02);
+      }catch(e){}
+    }
+    return {
+      click(){ tone(880,0.05,'square',0.05); },
+      open(){ tone(520,0.07,'triangle',0.07); tone(780,0.08,'triangle',0.06,0.05); },
+      close(){ tone(600,0.07,'triangle',0.06); tone(340,0.08,'triangle',0.05,0.05); },
+      error(){ tone(180,0.16,'sawtooth',0.08); },
+      boot(){ [0,0.12,0.24,0.4].forEach((d,i)=> tone([440,554,659,880][i],0.2,'sine',0.08,d)); },
+      key(){ tone(1100+Math.random()*250,0.02,'square',0.025); },
+      setEnabled(v){ enabled = v; if(v) ensureCtx(); },
+      isEnabled(){ return enabled; }
+    };
+  })();
+
+  const soundToggle = document.getElementById('sound-toggle');
+  soundToggle.addEventListener('click', ()=>{
+    const on = !SFX.isEnabled();
+    SFX.setEnabled(on);
+    soundToggle.setAttribute('aria-pressed', on ? 'true':'false');
+    soundToggle.textContent = on ? '🔊' : '🔇';
+    if(on) SFX.click();
+  });
+  // Alguns navegadores só liberam áudio após um gesto do usuário —
+  // tocamos o "boot chime" assim que o clique/tecla acontece pela primeira vez.
+  let bootSoundPlayed = false;
+  function playBootOnce(){
+    if(bootSoundPlayed) return;
+    bootSoundPlayed = true;
+    SFX.boot();
+  }
+  document.addEventListener('pointerdown', playBootOnce, {once:true});
+  document.addEventListener('keydown', playBootOnce, {once:true});
+  setTimeout(()=>{ SFX.boot(); bootSoundPlayed = true; }, 200);
+
   /* ---------------- MODAL DIALOG HELPER ---------------- */
   const modalOverlay = document.getElementById('modal-overlay');
   function showModal({icon='⏻', title='', message='', buttons=[]}){
+    SFX.error();
     document.getElementById('modal-icon-top').textContent = icon;
     document.getElementById('modal-icon-big').textContent = icon;
     document.getElementById('modal-title').textContent = title;
@@ -814,20 +955,23 @@ Digite "help" para ver os comandos disponíveis (ls, neofetch, whoami...).
     openWins.forEach((v)=>{ v.taskBtn && v.taskBtn.classList.toggle('active', v.el===el); });
   }
 
-  const gameInitFns = { invaders: initInvaders, hexagon: initHexagon, terminal: initTerminal, ordenacao: initSortVisualizer };
+  const gameInitFns = { invaders: initInvaders, hexagon: initHexagon, terminal: initTerminal, ordenacao: initSortVisualizer, labirinto: initMazeVisualizer };
   const gameInited = {};
 
   function openWindow(id, {silent=false} = {}){
     const el = document.getElementById('win-'+id);
     if(!el) return;
+    const wasHidden = el.classList.contains('hidden');
     el.classList.remove('hidden','closing');
     raise(el);
+    if(wasHidden && !silent) SFX.open();
     if(!openWins.has(id)){
       const btn = document.createElement('div');
       btn.className='task-btn';
       btn.tabIndex=0;
       btn.textContent = el.querySelector('.t-title').textContent;
       btn.addEventListener('click', ()=>{
+        SFX.click();
         if(el.classList.contains('hidden')){ el.classList.remove('hidden'); raise(el); }
         else if(el.classList.contains('active')){ el.classList.add('hidden'); }
         else { raise(el); }
@@ -845,6 +989,7 @@ Digite "help" para ver os comandos disponíveis (ls, neofetch, whoami...).
   function closeWindow(id){
     const rec = openWins.get(id);
     if(!rec) return;
+    SFX.close();
     rec.el.classList.add('closing');
     setTimeout(()=>{
       rec.el.classList.add('hidden');
@@ -861,6 +1006,7 @@ Digite "help" para ver os comandos disponíveis (ls, neofetch, whoami...).
       openWindow(icon.dataset.win);
     });
     icon.addEventListener('click', ()=>{
+      SFX.click();
       document.querySelectorAll('.icon').forEach(i=>i.classList.remove('selected'));
       icon.classList.add('selected');
     });
@@ -875,7 +1021,7 @@ Digite "help" para ver os comandos disponíveis (ls, neofetch, whoami...).
         window.open(url, '_blank');
       } else {
         showModal({
-          icon:'⚠️', title:'Atalho', 
+          icon:'⚠️', title:'Atalho',
           message:'Este atalho ainda não tem um link configurado. Defina '+(icon.dataset.link==='github'?'GITHUB_URL':'LINKEDIN_URL')+' no código.',
           buttons:[{label:'OK'}]
         });
@@ -897,8 +1043,8 @@ Digite "help" para ver os comandos disponíveis (ls, neofetch, whoami...).
     win.addEventListener('mousedown', ()=> raise(win));
     const id = win.id.replace('win-','');
     win.querySelector('[data-act="close"]').addEventListener('click', (e)=>{ e.stopPropagation(); closeWindow(id); });
-    win.querySelector('[data-act="min"]').addEventListener('click', (e)=>{ e.stopPropagation(); win.classList.add('hidden'); });
-    win.querySelector('[data-act="max"]').addEventListener('click', (e)=>{ e.stopPropagation(); toggleMaximize(win); });
+    win.querySelector('[data-act="min"]').addEventListener('click', (e)=>{ e.stopPropagation(); SFX.click(); win.classList.add('hidden'); });
+    win.querySelector('[data-act="max"]').addEventListener('click', (e)=>{ e.stopPropagation(); SFX.click(); toggleMaximize(win); });
 
     // Drag
     const bar = win.querySelector('[data-drag]');
@@ -906,6 +1052,7 @@ Digite "help" para ver os comandos disponíveis (ls, neofetch, whoami...).
     bar.addEventListener('mousedown', (e)=>{
       if(win.classList.contains('maximized')) return;
       dragging=true; sx=e.clientX; sy=e.clientY;
+      win.classList.add('interacting');
       const r = win.getBoundingClientRect(); ox=r.left; oy=r.top;
       win.style.left = ox+'px'; win.style.top = oy+'px';
       document.body.style.userSelect='none';
@@ -915,7 +1062,7 @@ Digite "help" para ver os comandos disponíveis (ls, neofetch, whoami...).
       win.style.left = Math.max(0, ox + (e.clientX-sx)) + 'px';
       win.style.top = Math.max(0, oy + (e.clientY-sy)) + 'px';
     });
-    window.addEventListener('mouseup', ()=>{ dragging=false; document.body.style.userSelect=''; });
+    window.addEventListener('mouseup', ()=>{ dragging=false; win.classList.remove('interacting'); document.body.style.userSelect=''; });
 
     // Resize
     const rh = win.querySelector('.resize-handle');
@@ -924,6 +1071,7 @@ Digite "help" para ver os comandos disponíveis (ls, neofetch, whoami...).
       rh.addEventListener('mousedown', (e)=>{
         if(win.classList.contains('maximized')) return;
         e.stopPropagation(); resizing=true;
+        win.classList.add('interacting');
         rsx=e.clientX; rsy=e.clientY;
         const r = win.getBoundingClientRect(); rw=r.width; rhh=r.height;
       });
@@ -932,7 +1080,7 @@ Digite "help" para ver os comandos disponíveis (ls, neofetch, whoami...).
         win.style.width = Math.max(280, rw + (e.clientX-rsx)) + 'px';
         win.style.height = Math.max(180, rhh + (e.clientY-rsy)) + 'px';
       });
-      window.addEventListener('mouseup', ()=> resizing=false);
+      window.addEventListener('mouseup', ()=>{ if(resizing){ resizing=false; win.classList.remove('interacting'); } });
     }
   });
 
@@ -958,7 +1106,7 @@ Digite "help" para ver os comandos disponíveis (ls, neofetch, whoami...).
   const startMenu = document.getElementById('start-menu');
   function toggleStartMenu(){ startMenu.classList.toggle('open'); }
   function closeStartMenu(){ startMenu.classList.remove('open'); }
-  startBtn.addEventListener('click', (e)=>{ e.stopPropagation(); toggleStartMenu(); });
+  startBtn.addEventListener('click', (e)=>{ e.stopPropagation(); SFX.click(); toggleStartMenu(); });
   startMenu.querySelectorAll('li[data-win]').forEach(li=>{
     li.addEventListener('click', ()=> openWindow(li.dataset.win));
   });
@@ -1039,44 +1187,99 @@ Digite "help" para ver os comandos disponíveis (ls, neofetch, whoami...).
     const ctx = canvas.getContext('2d');
     const W = canvas.width, H = canvas.height;
     const winEl = document.getElementById('win-invaders');
+    const overlay = document.getElementById('invaders-powerup');
+    const overlayOptions = document.getElementById('invaders-powerup-options');
     const cfg = GAME_CONFIG.invaders;
-    let player, bullets, enemyBullets, invaders, dir, score, lives, over, win, running=false;
+    let player, bullets, enemyBullets, invaders, dir, score, lives, running=false;
+    let levelIndex, state; // state: 'playing' | 'levelup' | 'gameover' | 'victory'
+    let doubleShot, shielded;
     const keys = {};
 
-    function reset(){
-      player = {x:W/2-14, y:H-24, w:28, h:12, speed:cfg.playerSpeed};
+    function setupLevel(){
+      const lvl = cfg.levels[levelIndex];
+      player = {x:W/2-14, y:H-24, w:28, h:12};
       bullets = []; enemyBullets = []; invaders = [];
-      for(let r=0;r<cfg.rows;r++){
-        for(let c=0;c<cfg.cols;c++){
-          invaders.push({x:24+c*42, y:26+r*26, w:26, h:16, alive:true});
+      for(let r=0;r<lvl.rows;r++){
+        for(let c=0;c<lvl.cols;c++){
+          invaders.push({x:24+c*38, y:26+r*24, w:24, h:15, alive:true});
         }
       }
-      dir=1; score=0; lives=cfg.lives; over=false; win=false;
+      dir=1;
+    }
+    function reset(){
+      levelIndex=0; score=0; lives=cfg.lives; state='playing';
+      doubleShot=false; shielded=false;
+      setupLevel();
     }
     reset();
+
+    function applyPowerUp(id){
+      if(id==='vida_extra') lives += 1;
+      else if(id==='tiro_duplo') doubleShot = true;
+      else if(id==='tiro_rapido') player._bulletSpeedBonus = (player._bulletSpeedBonus||0) + 3;
+      else if(id==='nave_agil') player._speedBonus = (player._speedBonus||0) + 1.6;
+      else if(id==='escudo') shielded = true;
+    }
+
+    function showLevelUp(){
+      state = 'levelup';
+      const pool = cfg.powerUps.slice();
+      const picks = [];
+      while(picks.length<3 && pool.length){
+        picks.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
+      }
+      overlayOptions.innerHTML = '';
+      picks.forEach(p=>{
+        const btn = document.createElement('button');
+        btn.className='powerup-btn';
+        btn.innerHTML = '<b>'+p.label+'</b>'+p.desc;
+        btn.addEventListener('click', ()=>{
+          SFX.click();
+          applyPowerUp(p.id);
+          overlay.style.display='none';
+          levelIndex += 1;
+          setupLevel();
+          state = 'playing';
+        });
+        overlayOptions.appendChild(btn);
+      });
+      overlay.style.display='flex';
+    }
 
     window.addEventListener('keydown', (e)=>{
       if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' '].includes(e.key)) e.preventDefault();
       keys[e.key]=true;
       if(e.key===' ' && !winEl.classList.contains('hidden')){
-        if(over){ reset(); }
-        else { bullets.push({x:player.x+player.w/2-2, y:player.y-8, w:4, h:10}); }
+        if(state==='gameover' || state==='victory'){ reset(); }
+        else if(state==='playing'){
+          const speed = player.speed = cfg.bulletSpeed + (player._bulletSpeedBonus||0);
+          if(doubleShot){
+            bullets.push({x:player.x+player.w/2-8, y:player.y-8, w:4, h:10});
+            bullets.push({x:player.x+player.w/2+4, y:player.y-8, w:4, h:10});
+          } else {
+            bullets.push({x:player.x+player.w/2-2, y:player.y-8, w:4, h:10});
+          }
+        }
       }
     });
     window.addEventListener('keyup', (e)=>{ keys[e.key]=false; });
 
     function update(){
-      if(over) return;
-      if(keys['ArrowLeft']||keys['a']||keys['A']) player.x -= player.speed;
-      if(keys['ArrowRight']||keys['d']||keys['D']) player.x += player.speed;
+      if(state!=='playing') return;
+      const lvl = cfg.levels[levelIndex];
+      const moveSpeed = cfg.playerSpeed + (player._speedBonus||0);
+      if(keys['ArrowLeft']||keys['a']||keys['A']) player.x -= moveSpeed;
+      if(keys['ArrowRight']||keys['d']||keys['D']) player.x += moveSpeed;
       player.x = Math.max(0, Math.min(W-player.w, player.x));
-      bullets.forEach(b=>b.y-=cfg.bulletSpeed); bullets = bullets.filter(b=>b.y>-10);
+      const bulletSpeed = cfg.bulletSpeed + (player._bulletSpeedBonus||0);
+      bullets.forEach(b=>b.y-=bulletSpeed); bullets = bullets.filter(b=>b.y>-10);
 
       let edge=false;
-      invaders.forEach(inv=>{ if(!inv.alive) return; inv.x += dir*cfg.invaderHorizontalSpeed; if(inv.x<10 || inv.x>W-inv.w-10) edge=true; });
+      const hSpeed = cfg.invaderHorizontalSpeed * lvl.speedMultiplier;
+      invaders.forEach(inv=>{ if(!inv.alive) return; inv.x += dir*hSpeed; if(inv.x<10 || inv.x>W-inv.w-10) edge=true; });
       if(edge){ dir*=-1; invaders.forEach(inv=> inv.y += cfg.invaderDescentStep); }
 
-      if(Math.random()<cfg.enemyShootChance){
+      if(Math.random() < cfg.enemyShootChance*lvl.speedMultiplier){
         const alive = invaders.filter(i=>i.alive);
         if(alive.length){
           const shooter = alive[Math.floor(Math.random()*alive.length)];
@@ -1094,29 +1297,34 @@ Digite "help" para ver os comandos disponíveis (ls, neofetch, whoami...).
       });
       enemyBullets.forEach(b=>{
         if(b.x<player.x+player.w && b.x+b.w>player.x && b.y<player.y+player.h && b.y+b.h>player.y){
-          b.y=H+999; lives-=1; if(lives<=0) over=true;
+          b.y=H+999;
+          if(shielded){ shielded=false; }
+          else { lives-=1; if(lives<=0) state='gameover'; }
         }
       });
-      if(invaders.some(inv=>inv.alive && inv.y+inv.h>player.y)) over=true;
-      if(invaders.every(inv=>!inv.alive)){ win=true; over=true; }
+      if(invaders.some(inv=>inv.alive && inv.y+inv.h>player.y)) state='gameover';
+      if(state==='playing' && invaders.every(inv=>!inv.alive)){
+        if(levelIndex >= cfg.levels.length-1) state='victory';
+        else showLevelUp();
+      }
     }
 
     function draw(){
       ctx.fillStyle='#05030f'; ctx.fillRect(0,0,W,H);
       ctx.fillStyle='#6FCF3C';
       invaders.forEach(inv=>{ if(inv.alive) ctx.fillRect(inv.x, inv.y, inv.w, inv.h); });
-      ctx.fillStyle='#5B9CF6';
+      ctx.fillStyle= shielded ? '#FFD166' : '#5B9CF6';
       ctx.fillRect(player.x, player.y, player.w, player.h);
       ctx.fillStyle='#FFD166';
       bullets.forEach(b=> ctx.fillRect(b.x,b.y,b.w,b.h));
       ctx.fillStyle='#F45B69';
       enemyBullets.forEach(b=> ctx.fillRect(b.x,b.y,b.w,b.h));
       ctx.fillStyle='#fff'; ctx.font='12px Consolas, monospace';
-      ctx.fillText('Pontos: '+score+'   Vidas: '+lives, 8, H-6);
-      if(over){
+      ctx.fillText('Fase '+(levelIndex+1)+'/'+cfg.levels.length+'   Pontos: '+score+'   Vidas: '+lives, 6, H-6);
+      if(state==='gameover' || state==='victory'){
         ctx.fillStyle='rgba(0,0,0,.65)'; ctx.fillRect(0,H/2-28,W,56);
         ctx.fillStyle='#fff'; ctx.font='14px Consolas, monospace'; ctx.textAlign='center';
-        ctx.fillText(win? 'Você venceu! Espaço para jogar de novo':'Fim de jogo — Espaço para reiniciar', W/2, H/2+5);
+        ctx.fillText(state==='victory' ? 'Você zerou o jogo! Espaço para jogar de novo' : 'Fim de jogo — Espaço para reiniciar', W/2, H/2+5);
         ctx.textAlign='left';
       }
     }
@@ -1320,6 +1528,8 @@ Digite "help" para ver os comandos disponíveis (ls, neofetch, whoami...).
       if(e.key==='Enter'){
         runCommand(input.value);
         input.value='';
+      } else if(e.key.length===1){
+        SFX.key();
       }
     });
     // Foca o input sempre que a janela do terminal for aberta/restaurada.
@@ -1455,6 +1665,180 @@ Digite "help" para ver os comandos disponíveis (ls, neofetch, whoami...).
 
     randomArray();
     render([]);
+  }
+
+  /* ============================================================
+     LABIRINTO — geração + visualização de busca (BFS, DFS,
+     Dijkstra e A*) num grid de células.
+     ============================================================ */
+  function initMazeVisualizer(){
+    const cfg = GAME_CONFIG.maze;
+    const gridEl = document.getElementById('maze-grid');
+    const select = document.getElementById('maze-algo');
+    const newBtn = document.getElementById('maze-new');
+    const searchBtn = document.getElementById('maze-search');
+    const ROWS = cfg.rows, COLS = cfg.cols;
+    const start = [0,0], end = [ROWS-1, COLS-1];
+    let grid = [];
+    let cellEls = [];
+    let running = false;
+
+    function key(r,c){ return r+','+c; }
+    function neighbors(r,c){
+      return [[r-1,c],[r+1,c],[r,c-1],[r,c+1]].filter(([rr,cc])=> rr>=0&&rr<ROWS&&cc>=0&&cc<COLS);
+    }
+
+    function generateMaze(){
+      grid = Array.from({length:ROWS}, ()=> Array(COLS).fill(0));
+      function carve(r,c){
+        grid[r][c]=1;
+        const dirs = [[0,2],[0,-2],[2,0],[-2,0]].sort(()=>Math.random()-0.5);
+        for(const [dr,dc] of dirs){
+          const nr=r+dr, nc=c+dc;
+          if(nr>=0&&nr<ROWS&&nc>=0&&nc<COLS && grid[nr][nc]===0){
+            grid[r+dr/2][c+dc/2]=1;
+            carve(nr,nc);
+          }
+        }
+      }
+      carve(0,0);
+      grid[end[0]][end[1]] = 1; // garante que o destino é aberto
+    }
+
+    function renderGrid(){
+      gridEl.style.gridTemplateColumns = 'repeat('+COLS+', 1fr)';
+      gridEl.innerHTML = '';
+      cellEls = [];
+      for(let r=0;r<ROWS;r++){
+        const row = [];
+        for(let c=0;c<COLS;c++){
+          const cell = document.createElement('div');
+          cell.className = 'maze-cell '+(grid[r][c]===1 ? '' : 'wall');
+          if(r===start[0]&&c===start[1]) cell.classList.add('start');
+          if(r===end[0]&&c===end[1]) cell.classList.add('end');
+          gridEl.appendChild(cell);
+          row.push(cell);
+        }
+        cellEls.push(row);
+      }
+    }
+
+    function clearSearchStyles(){
+      for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++){
+        cellEls[r][c].classList.remove('visited','frontier','solved');
+      }
+    }
+    function sleep(ms){ return new Promise(res=>setTimeout(res,ms)); }
+
+    function* bfs(){
+      const visited = new Set([key(...start)]);
+      const queue=[start]; const parent={};
+      while(queue.length){
+        const [r,c] = queue.shift();
+        yield {visit:[r,c]};
+        if(r===end[0]&&c===end[1]){ yield {done:true, parent}; return; }
+        for(const [nr,nc] of neighbors(r,c)){
+          if(grid[nr][nc]===1 && !visited.has(key(nr,nc))){
+            visited.add(key(nr,nc));
+            parent[key(nr,nc)] = [r,c];
+            queue.push([nr,nc]);
+          }
+        }
+      }
+      yield {done:true, parent};
+    }
+    function* dfs(){
+      const visited = new Set([key(...start)]);
+      const stack=[start]; const parent={};
+      while(stack.length){
+        const [r,c] = stack.pop();
+        yield {visit:[r,c]};
+        if(r===end[0]&&c===end[1]){ yield {done:true, parent}; return; }
+        for(const [nr,nc] of neighbors(r,c)){
+          if(grid[nr][nc]===1 && !visited.has(key(nr,nc))){
+            visited.add(key(nr,nc));
+            parent[key(nr,nc)] = [r,c];
+            stack.push([nr,nc]);
+          }
+        }
+      }
+      yield {done:true, parent};
+    }
+    function* weightedSearch(useHeuristic){
+      const h = (r,c)=> useHeuristic ? Math.abs(r-end[0])+Math.abs(c-end[1]) : 0;
+      const gScore = {[key(...start)]:0};
+      const parent = {};
+      let open = [{r:start[0], c:start[1], f:h(start[0],start[1])}];
+      const visited = new Set();
+      while(open.length){
+        open.sort((a,b)=>a.f-b.f);
+        const cur = open.shift();
+        const k = key(cur.r,cur.c);
+        if(visited.has(k)) continue;
+        visited.add(k);
+        yield {visit:[cur.r,cur.c]};
+        if(cur.r===end[0] && cur.c===end[1]){ yield {done:true, parent}; return; }
+        for(const [nr,nc] of neighbors(cur.r,cur.c)){
+          if(grid[nr][nc]!==1) continue;
+          const nk = key(nr,nc);
+          const tentative = gScore[k]+1;
+          if(gScore[nk]===undefined || tentative<gScore[nk]){
+            gScore[nk] = tentative;
+            parent[nk] = [cur.r,cur.c];
+            open.push({r:nr,c:nc,f:tentative+h(nr,nc)});
+          }
+        }
+      }
+      yield {done:true, parent};
+    }
+    const algos = {
+      bfs, dfs,
+      dijkstra: ()=>weightedSearch(false),
+      astar: ()=>weightedSearch(true)
+    };
+
+    async function runSearch(){
+      if(running) return;
+      running = true;
+      searchBtn.disabled = true; newBtn.disabled = true; select.disabled = true;
+      clearSearchStyles();
+      const gen = algos[select.value]();
+      let finalParent = null;
+      for(const step of gen){
+        if(step.visit){
+          const [r,c] = step.visit;
+          if(!(r===start[0]&&c===start[1]) && !(r===end[0]&&c===end[1])){
+            cellEls[r][c].classList.add('visited');
+          }
+          await sleep(cfg.stepDelayMs);
+        } else if(step.done){
+          finalParent = step.parent;
+        }
+      }
+      if(finalParent){
+        const path = [];
+        let cur = key(...end);
+        const startKey = key(...start);
+        while(cur !== startKey && finalParent[cur]){
+          path.push(cur);
+          cur = key(...finalParent[cur]);
+        }
+        path.reverse();
+        for(const k of path){
+          const [r,c] = k.split(',').map(Number);
+          if(!(r===end[0]&&c===end[1])) cellEls[r][c].classList.add('solved');
+          await sleep(10);
+        }
+      }
+      running = false;
+      searchBtn.disabled = false; newBtn.disabled = false; select.disabled = false;
+    }
+
+    newBtn.addEventListener('click', ()=>{ if(!running){ generateMaze(); renderGrid(); } });
+    searchBtn.addEventListener('click', runSearch);
+
+    generateMaze();
+    renderGrid();
   }
 
 })();
