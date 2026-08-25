@@ -175,6 +175,16 @@
     color:var(--ink-soft); font-size:12px; text-align:center; padding:10px; gap:6px;
   }
   .project-slot .plus{font-size:22px; color:#9AA6C2;}
+  .project-card{
+    border:1px solid var(--line); border-radius:8px; min-height:110px;
+    display:flex; flex-direction:column; justify-content:space-between;
+    padding:12px; gap:8px; background:var(--window-body);
+    box-shadow:0 1px 3px rgba(0,0,0,.08);
+  }
+  .project-card h3{ margin:0; font-size:13.5px; color:var(--xp-navy); }
+  .project-card p{ margin:0; font-size:12px; color:var(--ink-soft); line-height:1.4; }
+  .project-card a{ font-size:12px; font-weight:700; text-decoration:none; }
+  .project-card a:hover{ text-decoration:underline; }
 
   /* ---------- GAME WINDOWS ---------- */
   .game-body{ padding:10px 12px 12px; background:#111; display:flex; flex-direction:column; }
@@ -615,11 +625,23 @@
     <span class="t-btn" data-act="min">_</span><span class="t-btn" data-act="max">□</span><span class="t-btn close" data-act="close">✕</span>
   </div>
   <div class="win-body">
-    <p>Esta pasta está pronta para receber os próximos projetos. Cada novo card pode entrar no lugar de um dos espaços abaixo — é só adicionar o HTML no mesmo formato.</p>
+    <p> Só clicar nos links que você vai para os meus principais projetos 😉 </p>
     <div class="projects-grid" id="projects-grid">
-      <div class="project-slot"><span class="plus">+</span>Espaço livre para um projeto</div>
-      <div class="project-slot"><span class="plus">+</span>Espaço livre para um projeto</div>
-      <div class="project-slot"><span class="plus">+</span>Espaço livre para um projeto</div>
+      <div class="project-card">
+        <h3>Controle de Estoque</h3>
+        <p>Sistema de controle de inventário desenvolvido em C.</p>
+        <a href="https://github.com/LucassTml/Controle-de-Estoque" target="_blank" rel="noopener">Ver no GitHub →</a>
+      </div>
+      <div class="project-card">
+        <h3>Overwatch DataMeta</h3>
+        <p>Ferramenta web com dados e meta de Overwatch, feita em Python e HTML.</p>
+        <a href="https://github.com/LucassTml/Overwatch-DataMeta" target="_blank" rel="noopener">Ver no GitHub →</a>
+      </div>
+      <div class="project-card">
+        <h3>Tower Defense</h3>
+        <p>Jogo Tower Defense completo desenvolvido em Java com a biblioteca Swing.</p>
+        <a href="https://github.com/LucassTml/Projeto-TowerDefense" target="_blank" rel="noopener">Ver no GitHub →</a>
+      </div>
     </div>
   </div>
   <div class="resize-handle"></div>
