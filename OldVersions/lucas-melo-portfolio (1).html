@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lucas Melo — Portfólio</title>
+<style>
+  :root{
+    --xp-navy:#0A246A;
+    --xp-blue:#245EDC;
+    --xp-blue-light:#5B9CF6;
+    --xp-glow:#BFE2FF;
+    --taskbar-dark:#1B5E0F;
+    --taskbar-green:#2E8B1D;
+    --taskbar-green-light:#6FCF3C;
+    --window-chrome:#F4F2E9;
+    --window-body:#FCFBF7;
+    --ink:#232733;
+    --ink-soft:#5B6270;
+    --line:#C9C2AE;
+    --accent-pill:#E7EFFC;
+    --focus:#FFB100;
+    --radius:9px;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    font-family:'Segoe UI', 'Trebuchet MS', system-ui, sans-serif;
+    color:var(--ink);
+    overflow:hidden;
+    background:#3E7FD0;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+  }
+
+  /* ---------- DESKTOP / BLISS-STYLE BACKDROP ---------- */
+  #desktop{
+    position:fixed; inset:0; bottom:44px;
+    background:
+      radial-gradient(ellipse 60% 40% at 50% -10%, #8FCBFF 0%, transparent 60%),
+      linear-gradient(180deg, #3E7FD0 0%, #6FB3EC 42%, #BFE6C9 62%, #4B9E3F 66%, #2E6E22 100%);
+    overflow:hidden;
+    background-size:cover; background-position:center;
+  }
+  #desktop::before{
+    content:"";
+    position:absolute; left:-10%; right:-10%; bottom:-10%; height:46%;
+    background:radial-gradient(120% 100% at 50% 120%, #6FCB4E 0%, #2E6E22 70%);
+    border-radius:50% 50% 0 0 / 100% 100% 0 0;
+  }
+  #desktop::after{
+    content:"";
+    position:absolute; left:-20%; right:-20%; bottom:-18%; height:38%;
+    background:radial-gradient(120% 100% at 40% 130%, #86D95E 0%, #3A8A2C 75%);
+    border-radius:50% 50% 0 0 / 100% 100% 0 0;
+    opacity:.85;
+  }
+  #desktop.custom-bg{ background:#000; }
+  #desktop.custom-bg::before, #desktop.custom-bg::after{ content:none; }
+
+  .cloud{
+    position:absolute; background:rgba(255,255,255,.85);
+    border-radius:50px; filter:blur(1px);
+    animation:drift linear infinite;
+  }
+  @keyframes drift{
+    from{transform:translateX(-140px);}
+    to{transform:translateX(110vw);}
+  }
+
+  /* ---------- DESKTOP ICONS ---------- */
+  #icons{
+    position:absolute; top:18px; left:16px;
+    display:grid; grid-template-columns:repeat(2,84px);
+    gap:4px 6px; z-index:2;
+  }
+  .icon{
+    width:84px; padding:8px 4px 10px; text-align:center;
+    border-radius:6px; cursor:pointer; user-select:none; position:relative;
+    color:#fff; text-shadow:0 1px 3px rgba(0,0,0,.85);
+    border:1px solid transparent;
+  }
+  .icon:hover, .icon:focus-visible{ background:rgba(255,255,255,.18); border-color:rgba(255,255,255,.5); outline:none;}
+  .icon.selected{ background:rgba(90,150,255,.35); border:1px dotted #fff;}
+  .icon-glyph{
+    width:42px; height:42px; margin:0 auto 4px; border-radius:8px; position:relative;
+    display:flex; align-items:center; justify-content:center; font-size:22px;
+    box-shadow:0 3px 6px rgba(0,0,0,.35), inset 0 1px 1px rgba(255,255,255,.6);
+    transition:transform .18s cubic-bezier(.34,1.56,.64,1);
+  }
+  .icon.bounce .icon-glyph{ transform:scale(.8); }
+  .icon.shortcut .icon-glyph::after{
+    content:'↗'; position:absolute; bottom:-3px; right:-3px;
+    width:15px; height:15px; border-radius:3px; background:#fff; color:#233;
+    font-size:10px; line-height:15px; text-align:center; font-weight:900;
+    box-shadow:0 1px 2px rgba(0,0,0,.5);
+  }
+  .icon-label{ font-size:12px; line-height:1.25; font-weight:600; }
+
+  /* ---------- WINDOWS ---------- */
+  .window{
+    position:absolute;
+    min-width:300px;
+    background:var(--window-chrome);
+    border-radius:var(--radius) var(--radius) 6px 6px;
+    box-shadow:0 18px 44px rgba(0,0,0,.35), 0 2px 0 rgba(255,255,255,.4) inset;
+    border:1px solid #0A246A;
+    display:flex; flex-direction:column;
+    overflow:hidden;
+    transition:transform .2s cubic-bezier(.34,1.56,.64,1), opacity .16s ease,
+               left .18s ease, top .18s ease, width .18s ease, height .18s ease,
+               box-shadow .2s ease;
+    z-index:10;
+    transform-origin:center bottom;
+  }
+  .window.hidden{ transform:scale(.7) translateY(40px); opacity:0; pointer-events:none; }
+  .window.closing{ transform:scale(.55) translateY(140px); opacity:0; }
+  .window.active{ box-shadow:0 22px 54px rgba(0,0,0,.45), 0 2px 0 rgba(255,255,255,.4) inset;}
+  .window.maximized{
+    left:0 !important; top:0 !important; width:100% !important;
+    height:calc(100vh - 44px) !important; border-radius:0;
+  }
+  .titlebar{
+    display:flex; align-items:center; gap:8px;
+    padding:6px 6px 6px 10px;
+    background:linear-gradient(180deg, var(--xp-blue-light) 0%, var(--xp-blue) 42%, var(--xp-navy) 100%);
+    color:#fff; font-weight:700; font-size:13px;
+    cursor:grab; letter-spacing:.2px;
+  }
+  .window:not(.active) .titlebar{ filter:grayscale(.35) brightness(.8); }
+  .titlebar:active{cursor:grabbing;}
+  .titlebar .t-icon{font-size:15px;}
+  .titlebar .t-title{flex:1; text-shadow:0 1px 2px rgba(0,0,0,.5); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .t-btn{
+    width:22px; height:20px; border-radius:3px; border:1px solid rgba(255,255,255,.6);
+    background:linear-gradient(180deg,#5B9CF6,#1B4FC7);
+    color:#fff; font-size:11px; line-height:1; display:flex; align-items:center; justify-content:center;
+    cursor:pointer; transition:transform .1s ease;
+  }
+  .t-btn:hover{ filter:brightness(1.15); }
+  .t-btn:active{ transform:scale(.85); }
+  .t-btn:focus-visible{ outline:2px solid var(--focus); outline-offset:1px; }
+  .t-btn.close{ background:linear-gradient(180deg,#F09A8E,#C22A1B); }
+
+  .win-body{
+    padding:18px 20px 20px;
+    overflow-y:auto;
+    background:var(--window-body);
+    font-size:14px; line-height:1.55; color:var(--ink);
+  }
+  .win-body::-webkit-scrollbar{ width:12px; }
+  .win-body::-webkit-scrollbar-track{ background:#E4E1D4; }
+  .win-body::-webkit-scrollbar-thumb{ background:linear-gradient(180deg,#8FB6EA,#3D6FC9); border-radius:6px; border:2px solid #E4E1D4; }
+
+  .win-body h2{
+    margin:0 0 8px; font-size:19px; color:var(--xp-navy);
+    border-bottom:2px solid var(--accent-pill); padding-bottom:6px;
+  }
+  .win-body p{margin:0 0 10px;}
+  .pill{
+    display:inline-block; background:var(--accent-pill); color:var(--xp-navy);
+    font-family:'Consolas','Courier New',monospace; font-size:12px;
+    padding:3px 9px; border-radius:20px; margin:3px 4px 3px 0; border:1px solid #C9DAF5;
+  }
+  .field{margin-bottom:14px;}
+  .field-label{ font-weight:700; font-size:11px; text-transform:uppercase; letter-spacing:.6px; color:var(--ink-soft); margin-bottom:4px;}
+  a{color:var(--xp-blue); }
+
+  .resize-handle{
+    position:absolute; right:2px; bottom:2px; width:16px; height:16px; cursor:nwse-resize;
+    background:
+      linear-gradient(135deg, transparent 0 40%, #9AA0AC 40% 46%, transparent 46% 56%, #9AA0AC 56% 62%, transparent 62%);
+  }
+
+  /* ---------- PROJECTS EMPTY STATE ---------- */
+  .projects-grid{
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:14px;
+    margin-top:8px;
+  }
+  .project-slot{
+    border:2px dashed #C9C2AE; border-radius:8px; min-height:110px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    color:var(--ink-soft); font-size:12px; text-align:center; padding:10px; gap:6px;
+  }
+  .project-slot .plus{font-size:22px; color:#9AA6C2;}
+
+  /* ---------- GAME WINDOWS ---------- */
+  .game-body{ padding:10px 12px 12px; background:#111; }
+  .game-info{ color:#cfe6ff; font-size:11px; font-family:'Consolas',monospace; margin:0 0 6px; opacity:.85;}
+  canvas.game-canvas{ display:block; width:100%; height:auto; background:#05030f; border-radius:4px; border:1px solid #333; image-rendering:pixelated; }
+
+  /* ---------- TERMINAL ---------- */
+  .term-body{ padding:0; background:#0C0C0C; }
+  #term-output{
+    height:220px; overflow-y:auto; padding:10px 12px; color:#D8D8D8;
+    font-family:'Consolas','Courier New',monospace; font-size:12.5px; line-height:1.5; white-space:pre-wrap;
+  }
+  #term-output .term-cmd{ color:#9FE39F; }
+  #term-line{
+    display:flex; align-items:center; gap:6px; padding:6px 12px 10px;
+    font-family:'Consolas','Courier New',monospace; font-size:12.5px; color:#D8D8D8;
+  }
+  #term-input{
+    flex:1; background:transparent; border:none; outline:none; color:#D8D8D8;
+    font-family:'Consolas','Courier New',monospace; font-size:12.5px;
+  }
+  .hamster-reveal{ text-align:center; margin:10px 0; }
+  .hamster-wheel{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:64px; height:64px; border-radius:50%;
+    border:4px dashed #FFD166; font-size:30px;
+    animation:hamster-spin 0.7s linear infinite;
+  }
+  @keyframes hamster-spin{ from{ transform:rotate(0deg);} to{ transform:rotate(360deg);} }
+  .hamster-caption{ color:#FFD166; font-size:12px; margin-top:6px; }
+
+  /* ---------- TASKBAR ---------- */
+  #taskbar{
+    position:fixed; left:0; right:0; bottom:0; height:44px; z-index:100;
+    display:flex; align-items:stretch;
+    background:linear-gradient(180deg, #2E8B1D 0%, #1B5E0F 100%);
+    border-top:1px solid #7FE05C;
+    box-shadow:0 -2px 8px rgba(0,0,0,.35);
+  }
+  #start-btn{
+    display:flex; align-items:center; gap:6px;
+    padding:0 16px 0 10px; margin:4px 0 4px 4px;
+    background:linear-gradient(180deg,#6FCF3C,#2E8B1D 60%,#1B5E0F);
+    border:1px solid #1B5E0F; border-radius:6px 12px 12px 6px;
+    color:#fff; font-weight:800; font-style:italic; font-size:15px;
+    cursor:pointer; box-shadow:0 1px 0 rgba(255,255,255,.4) inset; transition:transform .1s ease;
+  }
+  #start-btn:hover{filter:brightness(1.08);}
+  #start-btn:active{transform:scale(.96);}
+  #start-btn .flag{font-size:16px; font-style:normal;}
+  #taskbar-sep{ width:1px; margin:6px 6px; background:rgba(255,255,255,.3); }
+  #tasks{ flex:1; display:flex; align-items:center; gap:6px; overflow-x:auto; padding:0 4px;}
+  .task-btn{
+    display:flex; align-items:center; gap:6px;
+    height:32px; padding:0 12px; border-radius:4px;
+    background:linear-gradient(180deg,#3E8FE0,#1B5FC7);
+    border:1px solid rgba(255,255,255,.35); color:#fff; font-size:12px;
+    cursor:pointer; white-space:nowrap; max-width:160px; overflow:hidden; text-overflow:ellipsis;
+    transition:transform .1s ease;
+    animation:taskIn .18s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes taskIn{ from{ transform:scale(.6); opacity:0; } to{ transform:scale(1); opacity:1; } }
+  .task-btn:active{ transform:scale(.94); }
+  .task-btn.active{ background:linear-gradient(180deg,#1B4FC7,#0A2E8A); box-shadow:inset 0 2px 4px rgba(0,0,0,.4);}
+  #clock{
+    display:flex; align-items:center; padding:0 16px; color:#fff; font-size:12px;
+    border-left:1px solid rgba(255,255,255,.3); margin:6px 4px; min-width:64px; justify-content:center;
+  }
+
+  /* ---------- START MENU ---------- */
+  #start-menu{
+    position:fixed; left:4px; bottom:48px; width:300px;
+    background:rgba(250,251,255,.92); backdrop-filter:blur(10px);
+    border:1px solid var(--xp-navy); border-radius:10px 10px 4px 4px;
+    box-shadow:0 -6px 0 var(--xp-navy) inset, 0 20px 50px rgba(0,0,0,.4);
+    overflow:hidden; z-index:200;
+    transform:translateY(16px) scale(.96); opacity:0; pointer-events:none;
+    transition:transform .18s cubic-bezier(.34,1.56,.64,1), opacity .16s ease;
+  }
+  #start-menu.open{ transform:translateY(0) scale(1); opacity:1; pointer-events:auto; }
+  #start-menu .user{
+    display:flex; align-items:center; gap:10px; padding:12px 14px;
+    background:linear-gradient(180deg,var(--xp-blue-light),var(--xp-navy));
+    color:#fff; font-weight:700; font-size:14px;
+  }
+  #start-menu .user .avatar{
+    width:36px;height:36px;border-radius:6px; background:#fff; color:var(--xp-navy);
+    display:flex;align-items:center;justify-content:center; font-weight:800; font-size:15px;
+    border:2px solid rgba(255,255,255,.8);
+  }
+  #start-menu ul{ list-style:none; margin:0; padding:8px; }
+  #start-menu li{
+    display:flex; align-items:center; gap:10px;
+    padding:8px 10px; border-radius:6px; cursor:pointer; font-size:13px; color:var(--ink);
+  }
+  #start-menu li:hover{ background:var(--accent-pill); }
+  #start-menu li .g{ width:26px; text-align:center; font-size:16px;}
+  #start-menu .divider{ height:1px; background:var(--line); margin:6px 4px; }
+  #start-menu .shutdown{ color:#B02A1B; font-weight:700; }
+
+  /* ---------- CONTEXT MENU ---------- */
+  #ctx-menu{
+    position:fixed; z-index:300; min-width:210px;
+    background:rgba(250,251,255,.96); backdrop-filter:blur(8px);
+    border:1px solid var(--xp-navy); border-radius:6px; box-shadow:0 14px 34px rgba(0,0,0,.4);
+    padding:6px; display:none;
+  }
+  #ctx-menu.open{ display:block; }
+  #ctx-menu div{ padding:8px 12px; font-size:13px; border-radius:5px; cursor:pointer; display:flex; gap:8px; align-items:center; }
+  #ctx-menu div:hover{ background:var(--accent-pill); }
+
+  /* ---------- MODAL DIALOG (shutdown / errors) ---------- */
+  #modal-overlay{
+    position:fixed; inset:0; background:rgba(10,20,40,.45); backdrop-filter:blur(2px);
+    display:none; align-items:center; justify-content:center; z-index:500;
+  }
+  #modal-overlay.open{display:flex;}
+  .sd-box{
+    width:340px; background:var(--window-chrome); border:1px solid var(--xp-navy);
+    border-radius:8px; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,.5);
+    animation:winPop .2s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes winPop{ from{ transform:scale(.8); opacity:0;} to{ transform:scale(1); opacity:1;} }
+  .sd-box .titlebar{cursor:default;}
+  .sd-body{ padding:18px 20px; font-size:13px; text-align:center; }
+  .sd-body .g{font-size:34px; display:block; margin-bottom:10px;}
+  .sd-actions{ display:flex; justify-content:center; gap:10px; padding:0 20px 18px;}
+  .sd-actions button{
+    padding:7px 16px; border-radius:5px; border:1px solid #7C93C0; cursor:pointer;
+    background:linear-gradient(180deg,#fff,#DCE6F7); font-size:13px;
+  }
+  .sd-actions button:hover{ background:linear-gradient(180deg,#EFF5FF,#C9DAF5); }
+  .sd-actions button:focus-visible, .task-btn:focus-visible, #start-btn:focus-visible, .icon:focus-visible{
+    outline:2px solid var(--focus); outline-offset:2px;
+  }
+
+  #boot-overlay{
+    position:fixed; inset:0; background:#000; z-index:1000;
+    display:flex; align-items:center; justify-content:center; flex-direction:column; gap:16px;
+    color:#fff; font-family:'Segoe UI',sans-serif;
+    animation:boot-fade 1.8s ease forwards;
+  }
+  @keyframes boot-fade{ 0%,70%{opacity:1;} 100%{opacity:0; visibility:hidden;} }
+  #boot-overlay .logo{ font-size:30px; font-weight:800; letter-spacing:1px; }
+  #boot-overlay .logo span{color:#5B9CF6;}
+  .boot-bar{ width:200px; height:10px; border-radius:5px; background:#1a1a1a; overflow:hidden; }
+  .boot-bar i{ display:block; width:40%; height:100%; background:linear-gradient(90deg,#1B5FC7,#6FCF3C); animation:load 1.1s ease-in-out infinite; }
+  @keyframes load{ 0%{transform:translateX(-100%);} 100%{transform:translateX(350%);} }
+
+  @media (max-width:720px){
+    #icons{ grid-template-columns:repeat(2,74px); left:10px; top:10px; gap:4px;}
+    .icon{width:74px;}
+    .window{ left:4vw !important; right:4vw; width:92vw !important; top:36px !important; height:70vh !important; }
+    .resize-handle{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<div id="boot-overlay">
+  <div class="logo">lucas<span>OS</span></div>
+  <div class="boot-bar"><i></i></div>
+</div>
+
+<div id="desktop">
+  <div class="cloud" style="width:90px;height:26px; top:12%; animation-duration:38s;"></div>
+  <div class="cloud" style="width:60px;height:18px; top:22%; animation-duration:52s; animation-delay:-20s;"></div>
+  <div class="cloud" style="width:110px;height:30px; top:8%; animation-duration:65s; animation-delay:-8s;"></div>
+
+  <div id="icons">
+    <div class="icon" tabindex="0" data-win="sobre">
+      <div class="icon-glyph" style="background:linear-gradient(160deg,#5B9CF6,#0A246A);">🧑‍💻</div>
+      <div class="icon-label">Sobre Mim</div>
+    </div>
+    <div class="icon" tabindex="0" data-win="habilidades">
+      <div class="icon-glyph" style="background:linear-gradient(160deg,#F6C85B,#B5750A);">🛠️</div>
+      <div class="icon-label">Habilidades</div>
+    </div>
+    <div class="icon" tabindex="0" data-win="formacao">
+      <div class="icon-glyph" style="background:linear-gradient(160deg,#9C5BF6,#4A0AB5);">🎓</div>
+      <div class="icon-label">Formação</div>
+    </div>
+    <div class="icon" tabindex="0" data-win="projetos">
+      <div class="icon-glyph" style="background:linear-gradient(160deg,#F6DE5B,#B58A0A);">📁</div>
+      <div class="icon-label">Meus Projetos</div>
+    </div>
+    <div class="icon" tabindex="0" data-win="contato">
+      <div class="icon-glyph" style="background:linear-gradient(160deg,#5BF6A0,#0AB558);">✉️</div>
+      <div class="icon-label">Contato</div>
+    </div>
+    <div class="icon shortcut" tabindex="0" data-link="github">
+      <div class="icon-glyph" style="background:linear-gradient(160deg,#4a4a4a,#141414);">🐙</div>
+      <div class="icon-label">GitHub</div>
+    </div>
+    <div class="icon shortcut" tabindex="0" data-link="linkedin">
+      <div class="icon-glyph" style="background:linear-gradient(160deg,#3d9be8,#0A66C2);">in</div>
+      <div class="icon-label">LinkedIn</div>
+    </div>
+    <div class="icon" tabindex="0" data-win="invaders">
+      <div class="icon-glyph" style="background:linear-gradient(160deg,#7CF67C,#0A7A2E);">👾</div>
+      <div class="icon-label">Space Invaders</div>
+    </div>
+    <div class="icon" tabindex="0" data-win="hexagon">
+      <div class="icon-glyph" style="background:linear-gradient(160deg,#F65BD0,#7A0A6E);">⬡</div>
+      <div class="icon-label">Hexágono</div>
+    </div>
+    <div class="icon" tabindex="0" data-win="terminal">
+      <div class="icon-glyph" style="background:linear-gradient(160deg,#333,#000); font-family:'Consolas',monospace; font-size:16px;">&gt;_</div>
+      <div class="icon-label">Terminal</div>
+    </div>
+  </div>
+</div>
+
+<!-- WINDOWS -->
+<div class="window hidden" id="win-sobre" style="left:8%; top:6%; width:420px;">
+  <div class="titlebar" data-drag>
+    <span class="t-icon">🧑‍💻</span><span class="t-title">Sobre Mim.txt</span>
+    <span class="t-btn" data-act="min">_</span><span class="t-btn" data-act="max">□</span><span class="t-btn close" data-act="close">✕</span>
+  </div>
+  <div class="win-body">
+    <h2>Lucas Melo</h2>
+    <p>Estudante de Engenharia da Computação na UPE, apaixonado por entender como as coisas funcionam por dentro — do bit ao sistema completo.</p>
+    <p>Desenvolvedor com experiência em <strong>C</strong> e <strong>Python</strong>, conhecimento em ambientes Unix e prática em desenvolvimento web, tanto front quanto back-end. Também lida com conteinerização de ambientes usando ferramentas como Docker.</p>
+    <p>Sua paixão é a engenharia do processo: aprimorar pequenos aplicativos, construir sistemas mais complexos e sempre buscar entender o funcionamento de cada etapa. Está constantemente explorando novas tecnologias e abordagens para entregar resultados modernos, eficientes e otimizados.</p>
+    <div class="field">
+      <div class="field-label">Idiomas</div>
+      <span class="pill">Português — Fluente</span><span class="pill">Inglês — Avançado</span>
+    </div>
+  </div>
+  <div class="resize-handle"></div>
+</div>
+
+<div class="window hidden" id="win-habilidades" style="left:42%; top:10%; width:440px;">
+  <div class="titlebar" data-drag>
+    <span class="t-icon">🛠️</span><span class="t-title">Habilidades — Painel de Controle</span>
+    <span class="t-btn" data-act="min">_</span><span class="t-btn" data-act="max">□</span><span class="t-btn close" data-act="close">✕</span>
+  </div>
+  <div class="win-body">
+    <div class="field">
+      <div class="field-label">Experiências técnicas</div>
+      <span class="pill">C — estruturas de dados e algoritmos</span>
+      <span class="pill">Python — Pandas, PyAutoGUI</span>
+      <span class="pill">Automação — n8n, APIs REST, Replit, Docker</span>
+      <span class="pill">Web — HTML, CSS, JS, Node.js, Spring Boot, React</span>
+      <span class="pill">Linux/Unix</span>
+      <span class="pill">Excel &amp; Office</span>
+      <span class="pill">Git &amp; DevOps</span>
+    </div>
+    <div class="field">
+      <div class="field-label">Habilidades interpessoais</div>
+      <span class="pill">Trabalho em equipe</span>
+      <span class="pill">Liderança</span>
+      <span class="pill">Pensamento crítico</span>
+      <span class="pill">Resolução de problemas</span>
+    </div>
+  </div>
+  <div class="resize-handle"></div>
+</div>
+
+<div class="window hidden" id="win-formacao" style="left:20%; top:20%; width:420px;">
+  <div class="titlebar" data-drag>
+    <span class="t-icon">🎓</span><span class="t-title">Formação Acadêmica</span>
+    <span class="t-btn" data-act="min">_</span><span class="t-btn" data-act="max">□</span><span class="t-btn close" data-act="close">✕</span>
+  </div>
+  <div class="win-body">
+    <div class="field">
+      <div class="field-label">2024 — 2029 (em andamento)</div>
+      <p><strong>Engenharia da Computação</strong> — Universidade de Pernambuco (UPE)</p>
+    </div>
+    <div class="field">
+      <div class="field-label">2020 — 2023</div>
+      <p><strong>Ensino Médio</strong> — Colégio Cognitivo</p>
+    </div>
+    <div class="field">
+      <div class="field-label">Concluído em 2022</div>
+      <p><strong>Curso de Inglês</strong> — Britanic (certificação de conclusão)</p>
+    </div>
+  </div>
+  <div class="resize-handle"></div>
+</div>
+
+<div class="window hidden" id="win-projetos" style="left:12%; top:12%; width:520px; height:400px;">
+  <div class="titlebar" data-drag>
+    <span class="t-icon">📁</span><span class="t-title">Meus Projetos</span>
+    <span class="t-btn" data-act="min">_</span><span class="t-btn" data-act="max">□</span><span class="t-btn close" data-act="close">✕</span>
+  </div>
+  <div class="win-body">
+    <p>Esta pasta está pronta para receber os próximos projetos. Cada novo card pode entrar no lugar de um dos espaços abaixo — é só adicionar o HTML no mesmo formato.</p>
+    <div class="projects-grid" id="projects-grid">
+      <div class="project-slot"><span class="plus">+</span>Espaço livre para um projeto</div>
+      <div class="project-slot"><span class="plus">+</span>Espaço livre para um projeto</div>
+      <div class="project-slot"><span class="plus">+</span>Espaço livre para um projeto</div>
+    </div>
+  </div>
+  <div class="resize-handle"></div>
+</div>
+
+<div class="window hidden" id="win-contato" style="left:34%; top:24%; width:360px;">
+  <div class="titlebar" data-drag>
+    <span class="t-icon">✉️</span><span class="t-title">Contato — Nova Mensagem</span>
+    <span class="t-btn" data-act="min">_</span><span class="t-btn" data-act="max">□</span><span class="t-btn close" data-act="close">✕</span>
+  </div>
+  <div class="win-body">
+    <div class="field"><div class="field-label">E-mail</div><a href="mailto:lemt99@gmail.com">lemt99@gmail.com</a></div>
+    <div class="field"><div class="field-label">Telefone</div>(81) 9 91615061</div>
+    <div class="field"><div class="field-label">LinkedIn</div><a class="cfg-linkedin-link" href="#" target="_blank" rel="noopener">Configure LINKEDIN_URL no código</a></div>
+    <div class="field"><div class="field-label">GitHub</div><a class="cfg-github-link" href="#" target="_blank" rel="noopener">Configure GITHUB_URL no código</a></div>
+  </div>
+  <div class="resize-handle"></div>
+</div>
+
+<div class="window hidden" id="win-invaders" style="left:16%; top:8%; width:420px;">
+  <div class="titlebar" data-drag>
+    <span class="t-icon">👾</span><span class="t-title">Space Invaders</span>
+    <span class="t-btn" data-act="min">_</span><span class="t-btn" data-act="max">□</span><span class="t-btn close" data-act="close">✕</span>
+  </div>
+  <div class="win-body game-body">
+    <p class="game-info">← → ou A/D para mover · Espaço para atirar/reiniciar</p>
+    <canvas class="game-canvas" id="canvas-invaders" width="380" height="280"></canvas>
+  </div>
+  <div class="resize-handle"></div>
+</div>
+
+<div class="window hidden" id="win-hexagon" style="left:46%; top:14%; width:360px;">
+  <div class="titlebar" data-drag>
+    <span class="t-icon">⬡</span><span class="t-title">Hexágono</span>
+    <span class="t-btn" data-act="min">_</span><span class="t-btn" data-act="max">□</span><span class="t-btn close" data-act="close">✕</span>
+  </div>
+  <div class="win-body game-body">
+    <p class="game-info">← → ou A/D para girar · Espaço para reiniciar</p>
+    <canvas class="game-canvas" id="canvas-hexagon" width="320" height="320"></canvas>
+  </div>
+  <div class="resize-handle"></div>
+</div>
+
+<div class="window hidden" id="win-terminal" style="left:26%; top:18%; width:420px;">
+  <div class="titlebar" data-drag>
+    <span class="t-icon">&gt;_</span><span class="t-title">Prompt de Comando</span>
+    <span class="t-btn" data-act="min">_</span><span class="t-btn" data-act="max">□</span><span class="t-btn close" data-act="close">✕</span>
+  </div>
+  <div class="win-body term-body">
+    <div id="term-output">Microsoft(R) LucasOS [Versão 5.1.2600]
+Digite "help" para ver os comandos disponíveis.
+</div>
+    <div id="term-line">
+      <span>C:\Users\Lucas&gt;</span>
+      <input id="term-input" type="text" autocomplete="off" spellcheck="false">
+    </div>
+  </div>
+  <div class="resize-handle"></div>
+</div>
+
+<!-- TASKBAR -->
+<div id="taskbar">
+  <div id="start-btn" tabindex="0"><span class="flag">🪟</span>iniciar</div>
+  <div id="taskbar-sep"></div>
+  <div id="tasks"></div>
+  <div id="clock"></div>
+</div>
+
+<!-- START MENU -->
+<div id="start-menu">
+  <div class="user"><div class="avatar">LM</div>Lucas Melo</div>
+  <ul>
+    <li data-win="sobre"><span class="g">🧑‍💻</span>Sobre Mim</li>
+    <li data-win="habilidades"><span class="g">🛠️</span>Habilidades</li>
+    <li data-win="formacao"><span class="g">🎓</span>Formação</li>
+    <li data-win="projetos"><span class="g">📁</span>Meus Projetos</li>
+    <li data-win="contato"><span class="g">✉️</span>Contato</li>
+    <li data-win="invaders"><span class="g">👾</span>Space Invaders</li>
+    <li data-win="hexagon"><span class="g">⬡</span>Hexágono</li>
+    <li data-win="terminal"><span class="g">&gt;_</span>Terminal</li>
+    <li class="divider"></li>
+    <li class="shutdown" id="shutdown-item"><span class="g">⏻</span>Encerrar sessão…</li>
+  </ul>
+</div>
+
+<!-- DESKTOP CONTEXT MENU -->
+<div id="ctx-menu">
+  <div id="ctx-wallpaper"><span>🖼️</span>Alterar papel de parede…</div>
+</div>
+<input type="file" id="wallpaper-input" accept="image/*" style="display:none;">
+
+<!-- MODAL (reused for shutdown + shortcut errors) -->
+<div id="modal-overlay">
+  <div class="sd-box">
+    <div class="titlebar"><span class="t-icon" id="modal-icon-top">⏻</span><span class="t-title" id="modal-title">Título</span></div>
+    <div class="sd-body">
+      <span class="g" id="modal-icon-big">⏻</span>
+      <span id="modal-message">Mensagem</span>
+    </div>
+    <div class="sd-actions" id="modal-actions"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  /* ============================================================
+     CONFIGURAÇÃO — edite estes valores facilmente
+     ============================================================ */
+
+  // Papel de parede: coloque o caminho/URL da sua imagem (ex: "fundo.jpg").
+  // Deixe null para manter o visual "Bliss" (colinas) padrão do XP.
+  const WALLPAPER_IMAGE = null;
+
+  // Cole aqui o link do seu GitHub e do seu LinkedIn.
+  const GITHUB_URL = "";     // ex: "https://github.com/SEU-USUARIO"
+  const LINKEDIN_URL = "";   // ex: "https://www.linkedin.com/in/SEU-USUARIO"
+
+  // Ajustes dos jogos — mexa nesses números para deixar mais fácil/difícil.
+  const GAME_CONFIG = {
+    invaders: {
+      playerSpeed: 4.2,          // velocidade horizontal da nave do jogador
+      bulletSpeed: 6,            // velocidade do tiro do jogador (subindo)
+      enemyBulletSpeed: 4.2,     // velocidade do tiro inimigo (descendo)
+      invaderHorizontalSpeed: 1.1, // velocidade lateral dos invasores
+      invaderDescentStep: 3,     // quanto os invasores descem a cada vez que batem na borda (menor = mais fácil)
+      enemyShootChance: 0.02,    // chance por frame de um invasor atirar
+      rows: 4,
+      cols: 8,
+      lives: 3
+    },
+    hexagon: {
+      playerRotateSpeed: 3.4,    // velocidade de rotação do jogador
+      baseSpeed: 150,            // velocidade inicial das paredes se aproximando (maior = mais rápido)
+      speedRamp: 10,             // o quanto a velocidade aumenta por segundo (dificuldade progressiva)
+      gapWidth: Math.PI/3.0,     // tamanho do vão em cada parede (em radianos)
+      cosmeticRotationSpeed: 0.25 // rotação apenas visual do hexágono central (não afeta colisão)
+    }
+  };
+
+  /* ============================================================ */
+
+  const desktop = document.getElementById('desktop');
+  if(WALLPAPER_IMAGE){
+    desktop.classList.add('custom-bg');
+    desktop.style.backgroundImage = 'url("'+WALLPAPER_IMAGE+'")';
+  }
+
+  document.querySelectorAll('.cfg-github-link').forEach(a=>{ if(GITHUB_URL){ a.href=GITHUB_URL; a.textContent=GITHUB_URL.replace(/^https?:\/\//,''); } });
+  document.querySelectorAll('.cfg-linkedin-link').forEach(a=>{ if(LINKEDIN_URL){ a.href=LINKEDIN_URL; a.textContent=LINKEDIN_URL.replace(/^https?:\/\//,''); } });
+
+  /* ---------------- MODAL DIALOG HELPER ---------------- */
+  const modalOverlay = document.getElementById('modal-overlay');
+  function showModal({icon='⏻', title='', message='', buttons=[]}){
+    document.getElementById('modal-icon-top').textContent = icon;
+    document.getElementById('modal-icon-big').textContent = icon;
+    document.getElementById('modal-title').textContent = title;
+    document.getElementById('modal-message').textContent = message;
+    const act = document.getElementById('modal-actions');
+    act.innerHTML = '';
+    buttons.forEach(b=>{
+      const btn = document.createElement('button');
+      btn.textContent = b.label;
+      btn.addEventListener('click', ()=>{ modalOverlay.classList.remove('open'); if(b.onClick) b.onClick(); });
+      act.appendChild(btn);
+    });
+    modalOverlay.classList.add('open');
+  }
+
+  /* ---------------- WINDOW MANAGEMENT ---------------- */
+  const openWins = new Map();
+  let zTop = 20;
+
+  function raise(el){
+    zTop += 1; el.style.zIndex = zTop;
+    document.querySelectorAll('.window').forEach(w=>w.classList.remove('active'));
+    el.classList.add('active');
+    openWins.forEach((v)=>{ v.taskBtn && v.taskBtn.classList.toggle('active', v.el===el); });
+  }
+
+  const gameInitFns = { invaders: initInvaders, hexagon: initHexagon, terminal: initTerminal };
+  const gameInited = {};
+
+  function openWindow(id, {silent=false} = {}){
+    const el = document.getElementById('win-'+id);
+    if(!el) return;
+    el.classList.remove('hidden','closing');
+    raise(el);
+    if(!openWins.has(id)){
+      const btn = document.createElement('div');
+      btn.className='task-btn';
+      btn.tabIndex=0;
+      btn.textContent = el.querySelector('.t-title').textContent;
+      btn.addEventListener('click', ()=>{
+        if(el.classList.contains('hidden')){ el.classList.remove('hidden'); raise(el); }
+        else if(el.classList.contains('active')){ el.classList.add('hidden'); }
+        else { raise(el); }
+      });
+      document.getElementById('tasks').appendChild(btn);
+      openWins.set(id, {el, taskBtn:btn});
+    }
+    if(gameInitFns[id] && !gameInited[id]){
+      gameInited[id] = true;
+      gameInitFns[id]();
+    }
+    if(!silent) closeStartMenu();
+  }
+
+  function closeWindow(id){
+    const rec = openWins.get(id);
+    if(!rec) return;
+    rec.el.classList.add('closing');
+    setTimeout(()=>{
+      rec.el.classList.add('hidden');
+      rec.el.classList.remove('closing');
+    }, 150);
+    rec.taskBtn.remove();
+    openWins.delete(id);
+  }
+
+  document.querySelectorAll('.icon[data-win]').forEach(icon=>{
+    icon.addEventListener('dblclick', ()=>{
+      icon.classList.add('bounce');
+      setTimeout(()=>icon.classList.remove('bounce'), 180);
+      openWindow(icon.dataset.win);
+    });
+    icon.addEventListener('click', ()=>{
+      document.querySelectorAll('.icon').forEach(i=>i.classList.remove('selected'));
+      icon.classList.add('selected');
+    });
+    icon.addEventListener('keydown', (e)=>{ if(e.key==='Enter') openWindow(icon.dataset.win); });
+  });
+
+  const linkMap = { github: GITHUB_URL, linkedin: LINKEDIN_URL };
+  document.querySelectorAll('.icon[data-link]').forEach(icon=>{
+    function activate(){
+      const url = linkMap[icon.dataset.link];
+      if(url){
+        window.open(url, '_blank');
+      } else {
+        showModal({
+          icon:'⚠️', title:'Atalho', 
+          message:'Este atalho ainda não tem um link configurado. Defina '+(icon.dataset.link==='github'?'GITHUB_URL':'LINKEDIN_URL')+' no código.',
+          buttons:[{label:'OK'}]
+        });
+      }
+    }
+    icon.addEventListener('dblclick', ()=>{
+      icon.classList.add('bounce');
+      setTimeout(()=>icon.classList.remove('bounce'), 180);
+      activate();
+    });
+    icon.addEventListener('click', ()=>{
+      document.querySelectorAll('.icon').forEach(i=>i.classList.remove('selected'));
+      icon.classList.add('selected');
+    });
+    icon.addEventListener('keydown', (e)=>{ if(e.key==='Enter') activate(); });
+  });
+
+  document.querySelectorAll('.window').forEach(win=>{
+    win.addEventListener('mousedown', ()=> raise(win));
+    const id = win.id.replace('win-','');
+    win.querySelector('[data-act="close"]').addEventListener('click', (e)=>{ e.stopPropagation(); closeWindow(id); });
+    win.querySelector('[data-act="min"]').addEventListener('click', (e)=>{ e.stopPropagation(); win.classList.add('hidden'); });
+    win.querySelector('[data-act="max"]').addEventListener('click', (e)=>{ e.stopPropagation(); toggleMaximize(win); });
+
+    // Drag
+    const bar = win.querySelector('[data-drag]');
+    let dragging=false, sx=0, sy=0, ox=0, oy=0;
+    bar.addEventListener('mousedown', (e)=>{
+      if(win.classList.contains('maximized')) return;
+      dragging=true; sx=e.clientX; sy=e.clientY;
+      const r = win.getBoundingClientRect(); ox=r.left; oy=r.top;
+      win.style.left = ox+'px'; win.style.top = oy+'px';
+      document.body.style.userSelect='none';
+    });
+    window.addEventListener('mousemove', (e)=>{
+      if(!dragging) return;
+      win.style.left = Math.max(0, ox + (e.clientX-sx)) + 'px';
+      win.style.top = Math.max(0, oy + (e.clientY-sy)) + 'px';
+    });
+    window.addEventListener('mouseup', ()=>{ dragging=false; document.body.style.userSelect=''; });
+
+    // Resize
+    const rh = win.querySelector('.resize-handle');
+    if(rh){
+      let resizing=false, rsx=0, rsy=0, rw=0, rhh=0;
+      rh.addEventListener('mousedown', (e)=>{
+        if(win.classList.contains('maximized')) return;
+        e.stopPropagation(); resizing=true;
+        rsx=e.clientX; rsy=e.clientY;
+        const r = win.getBoundingClientRect(); rw=r.width; rhh=r.height;
+      });
+      window.addEventListener('mousemove',(e)=>{
+        if(!resizing) return;
+        win.style.width = Math.max(280, rw + (e.clientX-rsx)) + 'px';
+        win.style.height = Math.max(180, rhh + (e.clientY-rsy)) + 'px';
+      });
+      window.addEventListener('mouseup', ()=> resizing=false);
+    }
+  });
+
+  function toggleMaximize(win){
+    if(win.classList.contains('maximized')){
+      win.classList.remove('maximized');
+      if(win.dataset.pl!==undefined) win.style.left = win.dataset.pl;
+      if(win.dataset.pt!==undefined) win.style.top = win.dataset.pt;
+      if(win.dataset.pw!==undefined) win.style.width = win.dataset.pw;
+      win.style.height = win.dataset.ph || '';
+    } else {
+      win.dataset.pl = win.style.left;
+      win.dataset.pt = win.style.top;
+      win.dataset.pw = win.style.width;
+      win.dataset.ph = win.style.height;
+      win.classList.add('maximized');
+      raise(win);
+    }
+  }
+
+  /* ---------------- START MENU ---------------- */
+  const startBtn = document.getElementById('start-btn');
+  const startMenu = document.getElementById('start-menu');
+  function toggleStartMenu(){ startMenu.classList.toggle('open'); }
+  function closeStartMenu(){ startMenu.classList.remove('open'); }
+  startBtn.addEventListener('click', (e)=>{ e.stopPropagation(); toggleStartMenu(); });
+  startMenu.querySelectorAll('li[data-win]').forEach(li=>{
+    li.addEventListener('click', ()=> openWindow(li.dataset.win));
+  });
+  document.addEventListener('click', (e)=>{
+    if(!startMenu.contains(e.target) && e.target!==startBtn) closeStartMenu();
+    closeCtxMenu();
+  });
+  document.addEventListener('keydown', (e)=>{
+    if(e.key==='Escape'){ closeStartMenu(); closeCtxMenu(); modalOverlay.classList.remove('open'); }
+  });
+
+  /* ---------------- DESKTOP CONTEXT MENU (wallpaper) ---------------- */
+  const ctxMenu = document.getElementById('ctx-menu');
+  const wallpaperInput = document.getElementById('wallpaper-input');
+  function closeCtxMenu(){ ctxMenu.classList.remove('open'); }
+  desktop.addEventListener('contextmenu', (e)=>{
+    e.preventDefault();
+    ctxMenu.style.left = e.clientX+'px';
+    ctxMenu.style.top = e.clientY+'px';
+    ctxMenu.classList.add('open');
+  });
+  document.getElementById('ctx-wallpaper').addEventListener('click', ()=>{
+    closeCtxMenu();
+    wallpaperInput.click();
+  });
+  wallpaperInput.addEventListener('change', ()=>{
+    const file = wallpaperInput.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev)=>{
+      desktop.classList.add('custom-bg');
+      desktop.style.backgroundImage = 'url("'+ev.target.result+'")';
+    };
+    reader.readAsDataURL(file);
+  });
+
+  /* ---------------- SHUTDOWN ---------------- */
+  document.getElementById('shutdown-item').addEventListener('click', ()=>{
+    closeStartMenu();
+    showModal({
+      icon:'⏻', title:'Encerrar sessão',
+      message:'Tem certeza de que deseja sair? Ainda há projetos por vir nesta pasta.',
+      buttons:[{label:'Continuar navegando'}, {label:'Encerrar'}]
+    });
+  });
+
+  /* ---------------- CLOCK ---------------- */
+  function tick(){
+    const d = new Date();
+    document.getElementById('clock').textContent =
+      d.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+  }
+  tick(); setInterval(tick, 15000);
+
+  /* ---------------- BOOT SEQUENCE ---------------- */
+  setTimeout(()=>{
+    openWindow('habilidades', {silent:true});
+  }, 1500);
+  setTimeout(()=>{
+    openWindow('projetos', {silent:true});
+  }, 1680);
+  setTimeout(()=>{
+    openWindow('sobre', {silent:true});
+  }, 1860);
+
+  /* ============================================================
+     JOGO 1 — SPACE INVADERS
+     ============================================================ */
+  function initInvaders(){
+    const canvas = document.getElementById('canvas-invaders');
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height;
+    const winEl = document.getElementById('win-invaders');
+    const cfg = GAME_CONFIG.invaders;
+    let player, bullets, enemyBullets, invaders, dir, score, lives, over, win, running=false;
+    const keys = {};
+
+    function reset(){
+      player = {x:W/2-14, y:H-24, w:28, h:12, speed:cfg.playerSpeed};
+      bullets = []; enemyBullets = []; invaders = [];
+      for(let r=0;r<cfg.rows;r++){
+        for(let c=0;c<cfg.cols;c++){
+          invaders.push({x:24+c*42, y:26+r*26, w:26, h:16, alive:true});
+        }
+      }
+      dir=1; score=0; lives=cfg.lives; over=false; win=false;
+    }
+    reset();
+
+    window.addEventListener('keydown', (e)=>{
+      if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' '].includes(e.key)) e.preventDefault();
+      keys[e.key]=true;
+      if(e.key===' ' && !winEl.classList.contains('hidden')){
+        if(over){ reset(); }
+        else { bullets.push({x:player.x+player.w/2-2, y:player.y-8, w:4, h:10}); }
+      }
+    });
+    window.addEventListener('keyup', (e)=>{ keys[e.key]=false; });
+
+    function update(){
+      if(over) return;
+      if(keys['ArrowLeft']||keys['a']||keys['A']) player.x -= player.speed;
+      if(keys['ArrowRight']||keys['d']||keys['D']) player.x += player.speed;
+      player.x = Math.max(0, Math.min(W-player.w, player.x));
+      bullets.forEach(b=>b.y-=cfg.bulletSpeed); bullets = bullets.filter(b=>b.y>-10);
+
+      let edge=false;
+      invaders.forEach(inv=>{ if(!inv.alive) return; inv.x += dir*cfg.invaderHorizontalSpeed; if(inv.x<10 || inv.x>W-inv.w-10) edge=true; });
+      if(edge){ dir*=-1; invaders.forEach(inv=> inv.y += cfg.invaderDescentStep); }
+
+      if(Math.random()<cfg.enemyShootChance){
+        const alive = invaders.filter(i=>i.alive);
+        if(alive.length){
+          const shooter = alive[Math.floor(Math.random()*alive.length)];
+          enemyBullets.push({x:shooter.x+shooter.w/2-2, y:shooter.y+shooter.h, w:4, h:10});
+        }
+      }
+      enemyBullets.forEach(b=>b.y+=cfg.enemyBulletSpeed); enemyBullets = enemyBullets.filter(b=>b.y<H+10);
+
+      bullets.forEach(b=>{
+        invaders.forEach(inv=>{
+          if(inv.alive && b.x<inv.x+inv.w && b.x+b.w>inv.x && b.y<inv.y+inv.h && b.y+b.h>inv.y){
+            inv.alive=false; b.y=-999; score+=10;
+          }
+        });
+      });
+      enemyBullets.forEach(b=>{
+        if(b.x<player.x+player.w && b.x+b.w>player.x && b.y<player.y+player.h && b.y+b.h>player.y){
+          b.y=H+999; lives-=1; if(lives<=0) over=true;
+        }
+      });
+      if(invaders.some(inv=>inv.alive && inv.y+inv.h>player.y)) over=true;
+      if(invaders.every(inv=>!inv.alive)){ win=true; over=true; }
+    }
+
+    function draw(){
+      ctx.fillStyle='#05030f'; ctx.fillRect(0,0,W,H);
+      ctx.fillStyle='#6FCF3C';
+      invaders.forEach(inv=>{ if(inv.alive) ctx.fillRect(inv.x, inv.y, inv.w, inv.h); });
+      ctx.fillStyle='#5B9CF6';
+      ctx.fillRect(player.x, player.y, player.w, player.h);
+      ctx.fillStyle='#FFD166';
+      bullets.forEach(b=> ctx.fillRect(b.x,b.y,b.w,b.h));
+      ctx.fillStyle='#F45B69';
+      enemyBullets.forEach(b=> ctx.fillRect(b.x,b.y,b.w,b.h));
+      ctx.fillStyle='#fff'; ctx.font='12px Consolas, monospace';
+      ctx.fillText('Pontos: '+score+'   Vidas: '+lives, 8, H-6);
+      if(over){
+        ctx.fillStyle='rgba(0,0,0,.65)'; ctx.fillRect(0,H/2-28,W,56);
+        ctx.fillStyle='#fff'; ctx.font='14px Consolas, monospace'; ctx.textAlign='center';
+        ctx.fillText(win? 'Você venceu! Espaço para jogar de novo':'Fim de jogo — Espaço para reiniciar', W/2, H/2+5);
+        ctx.textAlign='left';
+      }
+    }
+
+    function loop(){
+      if(winEl.classList.contains('hidden')){ running=false; return; }
+      update(); draw();
+      requestAnimationFrame(loop);
+    }
+    function ensureRunning(){ if(!running){ running=true; requestAnimationFrame(loop); } }
+    draw();
+    ensureRunning();
+    const obs = new MutationObserver(()=>{ if(!winEl.classList.contains('hidden')) ensureRunning(); });
+    obs.observe(winEl, {attributes:true, attributeFilter:['class']});
+  }
+
+  /* ============================================================
+     JOGO 2 — HEXÁGONO (estilo Super Hexagon)
+     ============================================================ */
+  function initHexagon(){
+    const canvas = document.getElementById('canvas-hexagon');
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height, cx=W/2, cy=H/2;
+    const winEl = document.getElementById('win-hexagon');
+    const cfg = GAME_CONFIG.hexagon;
+    const playerR = 46;
+    let angle, walls, t, speed, over, rot, running=false, lastTs=null;
+    const keys = {};
+
+    function spawnWall(r){
+      const gapCenter = Math.random()*Math.PI*2;
+      walls.push({r:r, gapCenter, gapWidth:cfg.gapWidth});
+    }
+    function reset(){
+      angle=0; walls=[]; t=0; speed=cfg.baseSpeed; over=false; rot=0;
+      spawnWall(200); spawnWall(300); spawnWall(400);
+    }
+    reset();
+
+    window.addEventListener('keydown', (e)=>{
+      if(['ArrowLeft','ArrowRight',' '].includes(e.key)) e.preventDefault();
+      keys[e.key]=true;
+      if(e.key===' ' && !winEl.classList.contains('hidden') && over) reset();
+    });
+    window.addEventListener('keyup', (e)=>{ keys[e.key]=false; });
+
+    function update(dt){
+      if(over) return;
+      t += dt;
+      rot += dt*cfg.cosmeticRotationSpeed;
+      if(keys['ArrowLeft']||keys['a']||keys['A']) angle -= dt*cfg.playerRotateSpeed;
+      if(keys['ArrowRight']||keys['d']||keys['D']) angle += dt*cfg.playerRotateSpeed;
+      speed += dt*cfg.speedRamp;
+      walls.forEach(w=> w.r -= dt*speed*0.55);
+      if(walls.length && walls[walls.length-1].r < 260) spawnWall(420);
+      walls = walls.filter(w=>{
+        if(w.r <= playerR+7 && w.r > playerR-7){
+          let a = ((angle - w.gapCenter) % (Math.PI*2) + Math.PI*2) % (Math.PI*2);
+          if(a > Math.PI) a -= Math.PI*2;
+          if(Math.abs(a) > w.gapWidth/2) over = true;
+        }
+        return w.r > 6;
+      });
+    }
+
+    function drawPoly(r, sides){
+      ctx.beginPath();
+      for(let i=0;i<=sides;i++){
+        const a = i/sides*Math.PI*2;
+        const px = Math.cos(a)*r, py = Math.sin(a)*r;
+        if(i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+      }
+    }
+
+    function draw(){
+      ctx.fillStyle='#0b0b16'; ctx.fillRect(0,0,W,H);
+      // O hexágono central gira só por estética — não participa da colisão.
+      ctx.save(); ctx.translate(cx,cy); ctx.rotate(rot);
+      ctx.strokeStyle='#5B9CF6'; ctx.lineWidth=3;
+      drawPoly(28,6); ctx.stroke();
+      ctx.restore();
+      // As paredes NÃO giram: seu ângulo precisa bater exatamente com o
+      // cálculo de colisão (que usa gapCenter sem nenhuma rotação extra).
+      ctx.save(); ctx.translate(cx,cy);
+      walls.forEach(w=>{
+        ctx.strokeStyle='#F65BD0'; ctx.lineWidth=10;
+        ctx.beginPath();
+        ctx.arc(0,0,w.r, w.gapCenter+w.gapWidth/2, w.gapCenter - w.gapWidth/2 + Math.PI*2);
+        ctx.stroke();
+      });
+      ctx.restore();
+      const px = cx + Math.cos(angle)*playerR, py = cy + Math.sin(angle)*playerR;
+      ctx.fillStyle='#FFD166';
+      ctx.beginPath(); ctx.arc(px,py,5,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle='#fff'; ctx.font='12px Consolas, monospace';
+      ctx.fillText('Tempo: '+t.toFixed(1)+'s', 8, H-8);
+      if(over){
+        ctx.fillStyle='rgba(0,0,0,.65)'; ctx.fillRect(0,H/2-26,W,52);
+        ctx.fillStyle='#fff'; ctx.font='13px Consolas, monospace'; ctx.textAlign='center';
+        ctx.fillText('Você bateu! Espaço para tentar de novo', W/2, H/2+5);
+        ctx.textAlign='left';
+      }
+    }
+
+    function loop(ts){
+      if(winEl.classList.contains('hidden')){ running=false; lastTs=null; return; }
+      if(lastTs===null) lastTs=ts;
+      const dt = Math.min(0.05,(ts-lastTs)/1000); lastTs=ts;
+      update(dt); draw();
+      requestAnimationFrame(loop);
+    }
+    function ensureRunning(){ if(!running){ running=true; lastTs=null; requestAnimationFrame(loop); } }
+    draw();
+    ensureRunning();
+    const obs = new MutationObserver(()=>{ if(!winEl.classList.contains('hidden')) ensureRunning(); });
+    obs.observe(winEl, {attributes:true, attributeFilter:['class']});
+  }
+
+  /* ============================================================
+     TERMINAL — com easter egg escondido
+     ============================================================ */
+  function initTerminal(){
+    const output = document.getElementById('term-output');
+    const input = document.getElementById('term-input');
+    const winEl = document.getElementById('win-terminal');
+
+    function print(text){
+      output.appendChild(document.createTextNode(text+'\n'));
+      output.scrollTop = output.scrollHeight;
+    }
+    function printHamster(){
+      const wrap = document.createElement('div');
+      wrap.className = 'hamster-reveal';
+      wrap.innerHTML = '<div class="hamster-wheel">🐹</div><div class="hamster-caption">um hamster apareceu. de nada.</div>';
+      output.appendChild(wrap);
+      output.scrollTop = output.scrollHeight;
+    }
+
+    function runCommand(raw){
+      const cmd = raw.trim();
+      output.appendChild(document.createTextNode('C:\\Users\\Lucas>'+cmd+'\n'));
+      const lower = cmd.toLowerCase();
+      if(cmd === 'idontwannabemercy'){
+        printHamster();
+      } else if(lower === 'help' || lower === 'ajuda'){
+        print('Comandos disponíveis: help, cls, whoami, date, sobre');
+      } else if(lower === 'cls' || lower === 'clear'){
+        output.textContent = '';
+      } else if(lower === 'whoami'){
+        print('lucasos\\lucas');
+      } else if(lower === 'date'){
+        print(new Date().toLocaleString('pt-BR'));
+      } else if(lower === 'sobre'){
+        print('Portfólio de Lucas Melo — estudante de Engenharia da Computação (UPE).');
+      } else if(cmd === ''){
+        // linha vazia, não faz nada
+      } else {
+        print('"'+cmd+'" não é reconhecido como um comando interno ou externo,\num programa operável ou um arquivo em lotes.');
+      }
+      output.scrollTop = output.scrollHeight;
+    }
+
+    input.addEventListener('keydown', (e)=>{
+      if(e.key==='Enter'){
+        runCommand(input.value);
+        input.value='';
+      }
+    });
+    // Foca o input sempre que a janela do terminal for aberta/restaurada.
+    const obs = new MutationObserver(()=>{ if(!winEl.classList.contains('hidden')) setTimeout(()=>input.focus(), 50); });
+    obs.observe(winEl, {attributes:true, attributeFilter:['class']});
+    setTimeout(()=>input.focus(), 50);
+  }
+
+})();
+</script>
+</body>
+</html>
