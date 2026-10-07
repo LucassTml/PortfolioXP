@@ -76,7 +76,6 @@ Um prompt no estilo `C:\Users\Lucas>` que entende alguns comandos:
 | `date` | Data e hora atuais |
 | `cls` / `clear` | Limpa a tela |
 
-> 👀 Dizem que existe um comando secreto escondido por aí...
 
 ![Tema Vista/Aero com o Terminal exibindo o neofetch e uma partida de Space Invaders em andamento](screenshots/tema-vista-jogos.jpg)
 <p align="center"><sub>Tema Vista/Aero com o <code>neofetch</code> no Terminal e uma partida de Space Invaders.</sub></p>
