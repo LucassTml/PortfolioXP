@@ -76,26 +76,6 @@ Um prompt no estilo `C:\Users\Lucas>` que entende alguns comandos:
 | `date` | Data e hora atuais |
 | `cls` / `clear` | Limpa a tela |
 
-
-![Tema Vista/Aero com o Terminal exibindo o neofetch e uma partida de Space Invaders em andamento](screenshots/tema-vista-jogos.jpg)
-<p align="center"><sub>Tema Vista/Aero com o <code>neofetch</code> no Terminal e uma partida de Space Invaders.</sub></p>
-
-## Como executar localmente
-
-Não há build nem dependências para instalar. Basta clonar o repositório e abrir o `index.html`:
-
-```bash
-git clone https://github.com/LucassTml/PortfolioXP.git
-cd PortfolioXP
-```
-
-Depois abra o `index.html` no navegador. Se preferir, sirva a pasta com um servidor local:
-
-```bash
-python -m http.server 8000
-# acesse http://localhost:8000
-```
-
 ## Personalização
 
 No início do `<script>` do `index.html` há um bloco **CONFIGURAÇÃO** com os valores mais fáceis de ajustar:
@@ -108,21 +88,6 @@ No início do `<script>` do `index.html` há um bloco **CONFIGURAÇÃO** com os 
 | `GAME_CONFIG.hexagon` | Velocidade de rotação, velocidade inicial, aceleração e tamanho do vão |
 | `GAME_CONFIG.sort` | Quantidade de barras e velocidade da animação de ordenação |
 | `GAME_CONFIG.maze` | Tamanho do labirinto (valores ímpares) e velocidade da busca |
-
-## Deploy
-
-O site é publicado automaticamente no **GitHub Pages** pelo workflow [`.github/workflows/static.yml`](.github/workflows/static.yml). A cada `push` na branch `main`, a versão mais recente vai ao ar em **[lucasstml.github.io/PortfolioXP](https://lucasstml.github.io/PortfolioXP/)**.
-
-## Estrutura do projeto
-
-```
-PortfolioXP/
-├── index.html                  # O portfólio completo: estrutura, estilos e scripts
-├── OldVersions/                # Versões anteriores, guardadas como histórico da evolução
-├── screenshots/                # Imagens usadas neste README
-└── .github/workflows/
-    └── static.yml              # Deploy automático no GitHub Pages
-```
 
 ## Tecnologias
 
