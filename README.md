@@ -10,6 +10,8 @@
 ![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-deploy%20autom%C3%A1tico-222222?logo=githubpages&logoColor=white)
 ![Zero dependências](https://img.shields.io/badge/depend%C3%AAncias-0-2E8B1D)
 
+![Área de trabalho do LucasOS com as janelas Sobre Mim, Meus Projetos e Habilidades abertas sobre o papel de parede clássico do XP](screenshots/desktop.jpg)
+
 ---
 
 ## Sobre
@@ -58,6 +60,9 @@ Tudo foi feito com **HTML, CSS e JavaScript puros**, num único arquivo e sem ne
 - **Ordenação:** veja passo a passo **Bubble Sort**, **Selection Sort**, **Insertion Sort**, **Quick Sort** e **Merge Sort** organizando 64 barras. Vermelho indica comparação e verde indica posição final.
 - **Labirinto:** gera labirintos aleatórios com *backtracking* recursivo e resolve com **BFS**, **DFS**, **Dijkstra** ou **A\***. Roxo indica células visitadas e amarelo indica o caminho final.
 
+![Labirinto resolvido com A* ao lado do visualizador de ordenação executando o Quick Sort](screenshots/algoritmos.jpg)
+<p align="center"><sub>Labirinto resolvido com A* e Quick Sort em andamento no visualizador de ordenação.</sub></p>
+
 ### `>_` Terminal
 Um prompt no estilo `C:\Users\Lucas>` que entende alguns comandos:
 
@@ -72,6 +77,9 @@ Um prompt no estilo `C:\Users\Lucas>` que entende alguns comandos:
 | `cls` / `clear` | Limpa a tela |
 
 > 👀 Dizem que existe um comando secreto escondido por aí...
+
+![Tema Vista/Aero com o Terminal exibindo o neofetch e uma partida de Space Invaders em andamento](screenshots/tema-vista-jogos.jpg)
+<p align="center"><sub>Tema Vista/Aero com o <code>neofetch</code> no Terminal e uma partida de Space Invaders.</sub></p>
 
 ## Como executar localmente
 
@@ -112,6 +120,7 @@ O site é publicado automaticamente no **GitHub Pages** pelo workflow [`.github/
 PortfolioXP/
 ├── index.html                  # O portfólio completo: estrutura, estilos e scripts
 ├── OldVersions/                # Versões anteriores, guardadas como histórico da evolução
+├── screenshots/                # Imagens usadas neste README
 └── .github/workflows/
     └── static.yml              # Deploy automático no GitHub Pages
 ```
