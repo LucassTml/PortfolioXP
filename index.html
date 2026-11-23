@@ -30,9 +30,9 @@
   if(sessionStorage.getItem('lucasos:booted')||matchMedia('(prefers-reduced-motion: reduce)').matches)d.classList.add('no-boot');
 }catch(e){}})();
 </script>
-<link rel="stylesheet" href="assets/css/style.css?v=3.0.0">
-<script src="assets/js/os.js?v=3.0.0" defer></script>
-<script src="assets/js/apps.js?v=3.0.0" defer></script>
+<link rel="stylesheet" href="assets/css/style.css?v=3.1.0">
+<script src="assets/js/os.js?v=3.1.0" defer></script>
+<script src="assets/js/apps.js?v=3.1.0" defer></script>
 <script type="application/ld+json">
 {
   "@context":"https://schema.org",
@@ -79,7 +79,23 @@
     <linearGradient id="g-bin" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#b8c6dd"/><stop offset=".35" stop-color="#eef3fb"/><stop offset="1" stop-color="#8fa2c4"/></linearGradient>
     <linearGradient id="g-brown" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9a36a"/><stop offset="1" stop-color="#8a5627"/></linearGradient>
     <linearGradient id="g-logo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7fb8ff"/><stop offset=".5" stop-color="#2f78e6"/><stop offset="1" stop-color="#1450b8"/></linearGradient>
+    <linearGradient id="g-teal" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7ff0d6"/><stop offset=".5" stop-color="#25b597"/><stop offset="1" stop-color="#0f7a64"/></linearGradient>
+    <linearGradient id="g-bronze" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f3b77e"/><stop offset="1" stop-color="#9a5a25"/></linearGradient>
+    <linearGradient id="g-silver" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#a7afbd"/></linearGradient>
+    <linearGradient id="g-stone" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#b9bfc9"/><stop offset=".45" stop-color="#e6e9ee"/><stop offset="1" stop-color="#959cab"/></linearGradient>
   </defs>
+
+  <!-- Ícones dos projetos -->
+  <symbol id="p-audian" viewBox="0 0 32 32"><path d="M7.5 13.5a8.5 8.5 0 0 0 17 0" fill="none" stroke="#4d5563" stroke-width="1.8"/><path d="M16 22v5M10.5 28.5h11" stroke="#4d5563" stroke-width="2.2" stroke-linecap="round"/><rect x="11" y="2.5" width="10" height="17" rx="5" fill="url(#g-silver)" stroke="#4d5563"/><path d="M11.5 8h9M11.5 11h9M11.5 14h9" stroke="#8a93a3"/><rect x="12.6" y="4.2" width="2.2" height="12" rx="1.1" fill="#fff" opacity=".8"/><path d="M25.5 7a7 7 0 0 1 0 9M28.3 4.5a10.5 10.5 0 0 1 0 14" fill="none" stroke="#2f78e6" stroke-width="1.7" stroke-linecap="round"/></symbol>
+  <symbol id="p-antigravity" viewBox="0 0 32 32"><path d="M5 10h5.5a3.2 3.2 0 1 1 6.4 0H22v5.5a3.2 3.2 0 1 1 0 6.4V27h-5.1a3.2 3.2 0 1 0-6.4 0H5v-5.1a3.2 3.2 0 1 0 0-6.4z" fill="url(#g-teal)" stroke="#0b5d4c" stroke-linejoin="round"/><path d="M6 11h4.8" stroke="#fff" stroke-opacity=".6"/><path d="M13.5 23v-8.5M10 18l3.5-3.5L17 18" fill="none" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M24 5.5l1 2.2 2.3.4-1.7 1.6.4 2.3-2-1.1-2 1.1.4-2.3-1.7-1.6 2.3-.4z" fill="url(#g-gold)" stroke="#8a6a00" stroke-width=".6"/></symbol>
+  <symbol id="p-texttosql" viewBox="0 0 32 32"><path d="M3 9v14c0 2 4 3.6 9 3.6s9-1.6 9-3.6V9" fill="url(#g-blue)" stroke="#1d4590"/><path d="M3 14c0 2 4 3.6 9 3.6s9-1.6 9-3.6M3 19c0 2 4 3.6 9 3.6s9-1.6 9-3.6" fill="none" stroke="#a8c6f7"/><ellipse cx="12" cy="9" rx="9" ry="3.6" fill="#d6e6ff" stroke="#1d4590"/><path d="M18.5 13h10a1.5 1.5 0 0 1 1.5 1.5v7a1.5 1.5 0 0 1-1.5 1.5h-5.5l-3.5 3.2V23h-1a1.5 1.5 0 0 1-1.5-1.5v-7a1.5 1.5 0 0 1 1.5-1.5z" fill="#fff" stroke="#5f6f8a"/><path d="M21.6 16.2a1.9 1.9 0 1 1 2.7 1.7c-.5.3-.9.6-.9 1.3v.3" fill="none" stroke="#e0452c" stroke-width="1.5" stroke-linecap="round"/><circle cx="23.4" cy="21.2" r=".9" fill="#e0452c"/></symbol>
+  <symbol id="p-ressonancia" viewBox="0 0 32 32"><path d="M5.5 19v-3.5a10.5 10.5 0 0 1 21 0V19" fill="none" stroke="#3b3f48" stroke-width="2.6"/><path d="M5.5 19v-3.5a10.5 10.5 0 0 1 21 0V19" fill="none" stroke="#8a919c" stroke-width=".8"/><rect x="2.5" y="16.5" width="7.5" height="12" rx="3" fill="url(#g-teal)" stroke="#0b5d4c"/><rect x="22" y="16.5" width="7.5" height="12" rx="3" fill="url(#g-teal)" stroke="#0b5d4c"/><rect x="4" y="18" width="2" height="8" rx="1" fill="#fff" opacity=".55"/><rect x="23.5" y="18" width="2" height="8" rx="1" fill="#fff" opacity=".55"/><path d="M13 22.5v-3M16 25v-8M19 22.5v-3" stroke="#2f78e6" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="p-overwatch" viewBox="0 0 32 32"><path d="M7 8l9.5 5.5M7 8l2 15M16.5 13.5l9-6M16.5 13.5L9 23M16.5 13.5l8 11.5M9 23l16 2" stroke="#6f7a8c" stroke-width="1.5"/><circle cx="7" cy="8" r="3.6" fill="url(#g-orange)" stroke="#a05a00"/><circle cx="25.5" cy="7.5" r="3.2" fill="url(#g-red)" stroke="#8a1a0c"/><circle cx="9" cy="23" r="3.4" fill="url(#g-green)" stroke="#1e6b14"/><circle cx="25" cy="25" r="3.4" fill="url(#g-purple)" stroke="#5a1278"/><circle cx="16.5" cy="13.5" r="4.6" fill="url(#g-blue)" stroke="#1d4590"/><ellipse cx="15.3" cy="11.7" rx="2.2" ry="1.2" fill="#fff" opacity=".6"/></symbol>
+  <symbol id="p-cinelab" viewBox="0 0 32 32"><path d="M4 13.5h24V27a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z" fill="url(#g-dark)" stroke="#000"/><path d="M4 13.5h24v4H4z" fill="#fff" stroke="#000"/><path d="M9 13.5l-2.6 4M15 13.5l-2.6 4M21 13.5l-2.6 4M27 13.5l-2.6 4" stroke="#000" stroke-width="2.2"/><g transform="rotate(-15 4 13)"><path d="M4 8.5h24V13H4z" fill="#fff" stroke="#000"/><path d="M9 8.5 6.2 13M15 8.5 12.2 13M21 8.5 18.2 13M27 8.5 24.2 13" stroke="#000" stroke-width="2.2"/></g><path d="M7.5 21.5h11M7.5 24.5h7" stroke="#9aa1ad"/><circle cx="24" cy="23.5" r="2.2" fill="#e0452c"/></symbol>
+  <symbol id="p-portfolio" viewBox="0 0 32 32"><rect x="2" y="3" width="28" height="20" rx="2" fill="url(#g-beige)" stroke="#8c8466"/><rect x="4.5" y="5.5" width="23" height="15" fill="#4b93ec"/><path d="M4.5 15.5c6-3 13-3 23 0v5h-23z" fill="#4fa82a"/><rect x="8" y="7.5" width="12" height="8" fill="#ece9d8" stroke="#0831d9" stroke-width=".8"/><rect x="8" y="7.5" width="12" height="2.2" fill="#0a5be8"/><rect x="4.5" y="19" width="23" height="1.5" fill="#245edc"/><rect x="4.5" y="19" width="4.5" height="1.5" fill="#3c9a3c"/><path d="M12 23h8l1.5 3.5h-11z" fill="url(#g-beige)" stroke="#8c8466"/><rect x="8" y="26.5" width="16" height="2.5" rx="1" fill="url(#g-beige)" stroke="#8c8466"/></symbol>
+  <symbol id="p-cinedata" viewBox="0 0 32 32"><path d="M4 22v2.5L16 30l12-5.5V22L16 27.5z" fill="#7a4a1e" stroke="#5c3a17" stroke-linejoin="round"/><path d="M16 16.5 28 22l-12 5.5L4 22z" fill="url(#g-bronze)" stroke="#5c3a17" stroke-linejoin="round"/><path d="M4 15.5V18l12 5.5L28 18v-2.5L16 21z" fill="#8b93a3" stroke="#5a6272" stroke-linejoin="round"/><path d="M16 10 28 15.5 16 21 4 15.5z" fill="url(#g-silver)" stroke="#5a6272" stroke-linejoin="round"/><path d="M4 9v2.5L16 17l12-5.5V9L16 14.5z" fill="#b88a00" stroke="#7a5a00" stroke-linejoin="round"/><path d="M16 3.5 28 9l-12 5.5L4 9z" fill="url(#g-gold)" stroke="#7a5a00" stroke-linejoin="round"/></symbol>
+  <symbol id="p-tower" viewBox="0 0 32 32"><path d="M16.5 8.5V2.5" stroke="#555" stroke-width="1.2"/><path d="M17 2.5h6.5l-2 2.2 2 2.2H17z" fill="#e0452c" stroke="#8a1a0c" stroke-width=".6"/><path d="M9 29V13h14v16z" fill="url(#g-stone)" stroke="#4d5563"/><path d="M7.5 13.5V8.5h3.2v2.2h3V8.5h4.6v2.2h3V8.5h3.2v5z" fill="url(#g-stone)" stroke="#4d5563"/><path d="M9 18h14M9 23h14M13 13.5V18M19 18v5M13 23v6" stroke="#9aa1ad" stroke-width=".8"/><path d="M13.5 29v-4.5a2.5 2.5 0 0 1 5 0V29z" fill="#6b4420" stroke="#3e2710" stroke-width=".7"/><rect x="14.6" y="14.6" width="2.8" height="3.6" rx="1.2" fill="#2b2b2b"/></symbol>
+  <symbol id="p-grade" viewBox="0 0 32 32"><rect x="3.5" y="6" width="25" height="23" rx="1.5" fill="url(#g-paper)" stroke="#5f6f8a"/><path d="M3.5 7.5A1.5 1.5 0 0 1 5 6h22a1.5 1.5 0 0 1 1.5 1.5V12h-25z" fill="url(#g-red)" stroke="#8a1a0c"/><path d="M10 3.5v5M22 3.5v5" stroke="#4d5563" stroke-width="2.2" stroke-linecap="round"/><path d="M3.5 18h25M3.5 24h25M12 12v17M20 12v17" stroke="#d3dbe8"/><path d="M8 21l8 5 8-11" fill="none" stroke="#2f78e6" stroke-width="1.6"/><circle cx="8" cy="21" r="2.2" fill="url(#g-green)" stroke="#1e6b14" stroke-width=".7"/><circle cx="16" cy="26" r="2.2" fill="url(#g-orange)" stroke="#a05a00" stroke-width=".7"/><circle cx="24" cy="15" r="2.2" fill="url(#g-blue)" stroke="#1d4590" stroke-width=".7"/></symbol>
 
   <!-- Marca do LucasOS -->
   <symbol id="x-logo" viewBox="0 0 32 32"><rect x="2" y="2" width="28" height="28" rx="7" fill="url(#g-logo)" stroke="#0d3a8c"/><path d="M4 9c4-4 20-4 24 0v-1C24 3 8 3 4 8z" fill="#fff" opacity=".45"/><path d="M12.5 8.5 10.5 23h11" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
@@ -239,6 +255,13 @@ Ultimamente ando bem envolvido com IA rodando localmente: LLMs na minha própria
 
 O que eu mais gosto é da engenharia do processo. Gosto de entender como cada etapa funciona, seja polindo um app pequeno ou montando um sistema maior.
 
+PROJETOS EM DESTAQUE
+- Audian: ditado por voz para Windows que funciona offline (Rust)
+- OpenlyAntigravity: plugin do OpenCode que usa o agy como agente
+- GenAI Text-to-SQL: agente que transforma perguntas em SQL
+- Ressonância: enciclopédia interativa de áudio (<a href="https://ressonancia-one.vercel.app" target="_blank" rel="noopener">ressonancia-one.vercel.app</a>)
+Os outros estão na pasta Meus Projetos, com descrição e links de cada um.
+
 O QUE ESTOU FAZENDO AGORA
 - construindo ferramentas para agentes de código e modelos locais
 - estudando inferência local (llama.cpp, whisper.cpp), skills de agentes, MCP e RAG
@@ -258,7 +281,7 @@ Dá dois cliques nos outros ícones da área de trabalho pra ver o resto.
   </section>
 
   <!-- MEUS PROJETOS (Explorer) -->
-  <section class="window" data-app="projetos" data-w="880" data-h="600">
+  <section class="window" data-app="projetos" data-w="860" data-h="640">
     <div class="win-body app explorer" data-explorer data-view="tiles" data-empty-title="Meus Projetos" data-empty-sub="Pasta de arquivos">
       <div class="menubar" role="menubar">
         <div class="mb"><button class="mb-btn" type="button">Arquivo</button>
@@ -289,24 +312,33 @@ Dá dois cliques nos outros ícones da área de trabalho pra ver o resto.
           <section class="tp"><h3 class="tp-h">Detalhes</h3><div class="tp-b tp-details" data-details></div></section>
         </aside>
         <div class="ex-view">
+          <div class="ex-intro">
+            <svg class="xi"><use href="#x-folder"/></svg>
+            <div>
+              <h3>Meus Projetos</h3>
+              <p>Estes são os projetos de que eu mais gosto, do ditado por voz que roda sem internet ao agente que transforma perguntas em SQL. Estão separados por área.</p>
+              <p class="ex-tip ex-tip-wide"><b>Clique em um projeto</b> para ver a descrição e os links no painel da esquerda. <b>Dois cliques</b> abrem o código no GitHub.</p>
+              <p class="ex-tip ex-tip-narrow">Cada projeto tem uma descrição e links para o código e, quando existe, para o site.</p>
+            </div>
+          </div>
           <div class="ex-header" aria-hidden="true"><span>Nome</span><span>Linguagem</span><span>Resumo</span></div>
 
           <h4 class="ex-group">IA e agentes</h4>
           <div class="ex-items">
             <article class="ex-item" tabindex="0" data-code="https://github.com/LucassTml/audian" data-download="https://github.com/LucassTml/audian/releases/latest">
-              <span class="ex-ico"><svg class="xi"><use href="#x-folder"/></svg><svg class="xi em"><use href="#x-chip"/></svg></span>
+              <span class="ex-ico"><svg class="xi"><use href="#p-audian"/></svg></span>
               <h3 class="ex-name">Audian</h3><span class="ex-c2">Rust</span><span class="ex-c3">Ditado por voz offline</span>
               <p class="ex-desc">Ditado por voz para Windows, open-source e inspirado no Wispr Flow. O reconhecimento de fala (Whisper ou Parakeet) e um LLM pequeno (Qwen) rodam no próprio computador, sem internet, e transformam o que você fala em texto bem escrito em qualquer programa.</p>
               <div class="ex-links"><a href="https://github.com/LucassTml/audian" target="_blank" rel="noopener">Código</a><a href="https://github.com/LucassTml/audian/releases/latest" target="_blank" rel="noopener">Baixar</a></div>
             </article>
             <article class="ex-item" tabindex="0" data-code="https://github.com/LucassTml/OpenlyAntigravity">
-              <span class="ex-ico"><svg class="xi"><use href="#x-folder"/></svg><svg class="xi em"><use href="#x-chip"/></svg></span>
+              <span class="ex-ico"><svg class="xi"><use href="#p-antigravity"/></svg></span>
               <h3 class="ex-name">OpenlyAntigravity</h3><span class="ex-c2">JavaScript</span><span class="ex-c3">Plugin para o OpenCode</span>
               <p class="ex-desc">Plugin para o OpenCode que usa o seu próprio Antigravity (agy) no terminal como agente. Assim dá pra aproveitar o plano do Google que você já paga, sem chave de API paga e sem OAuth.</p>
               <div class="ex-links"><a href="https://github.com/LucassTml/OpenlyAntigravity" target="_blank" rel="noopener">Código</a></div>
             </article>
             <article class="ex-item" tabindex="0" data-code="https://github.com/LucassTml/GenAI-WebInterface-RocketLab-2026_2">
-              <span class="ex-ico"><svg class="xi"><use href="#x-folder"/></svg><svg class="xi em"><use href="#x-chip"/></svg></span>
+              <span class="ex-ico"><svg class="xi"><use href="#p-texttosql"/></svg></span>
               <h3 class="ex-name">GenAI Text-to-SQL</h3><span class="ex-c2">Python</span><span class="ex-c3">Perguntas viram SQL</span>
               <p class="ex-desc">Agente que transforma perguntas em português em consultas SQL sobre a camada Gold do CineData, no Databricks. Tem guardrails, busca semântica, troca de modelo pelo OpenRouter e interface em Streamlit.</p>
               <div class="ex-links"><a href="https://github.com/LucassTml/GenAI-WebInterface-RocketLab-2026_2" target="_blank" rel="noopener">Código</a></div>
@@ -316,25 +348,25 @@ Dá dois cliques nos outros ícones da área de trabalho pra ver o resto.
           <h4 class="ex-group">Web</h4>
           <div class="ex-items">
             <article class="ex-item" tabindex="0" data-site="https://ressonancia-one.vercel.app" data-code="https://github.com/LucassTml/ressonancia">
-              <span class="ex-ico"><svg class="xi"><use href="#x-folder"/></svg><svg class="xi em"><use href="#x-globe"/></svg></span>
+              <span class="ex-ico"><svg class="xi"><use href="#p-ressonancia"/></svg></span>
               <h3 class="ex-name">Ressonância</h3><span class="ex-c2">TypeScript</span><span class="ex-c3">Enciclopédia de áudio e IEMs</span>
               <p class="ex-desc">Enciclopédia interativa de áudio, psicoacústica e fones IEM, em português e inglês. Tem dezenas de laboratórios em Web Audio que processam o som direto no navegador.</p>
               <div class="ex-links"><a href="https://ressonancia-one.vercel.app" target="_blank" rel="noopener">Abrir site</a><a href="https://github.com/LucassTml/ressonancia" target="_blank" rel="noopener">Código</a></div>
             </article>
             <article class="ex-item" tabindex="0" data-site="https://overwatch-data-meta.vercel.app" data-code="https://github.com/LucassTml/Overwatch-DataMeta">
-              <span class="ex-ico"><svg class="xi"><use href="#x-folder"/></svg><svg class="xi em"><use href="#x-globe"/></svg></span>
+              <span class="ex-ico"><svg class="xi"><use href="#p-overwatch"/></svg></span>
               <h3 class="ex-name">Overwatch DataMeta</h3><span class="ex-c2">D3.js</span><span class="ex-c3">Grafo de heróis e counters</span>
               <p class="ex-desc">Grafo interativo dos heróis de Overwatch 2, com funções, habilidades, counters e sinergias. O protótipo foi em Python com NetworkX e a versão final em D3.js.</p>
               <div class="ex-links"><a href="https://overwatch-data-meta.vercel.app" target="_blank" rel="noopener">Abrir site</a><a href="https://github.com/LucassTml/Overwatch-DataMeta" target="_blank" rel="noopener">Código</a></div>
             </article>
             <article class="ex-item" tabindex="0" data-code="https://github.com/LucassTml/CineLab_RocketLab2026.2">
-              <span class="ex-ico"><svg class="xi"><use href="#x-folder"/></svg><svg class="xi em"><use href="#x-globe"/></svg></span>
+              <span class="ex-ico"><svg class="xi"><use href="#p-cinelab"/></svg></span>
               <h3 class="ex-name">CineLab</h3><span class="ex-c2">Python</span><span class="ex-c3">Catálogo de filmes full-stack</span>
               <p class="ex-desc">Site completo, com front e back-end, para gerenciar um catálogo de filmes, com cadastro e edição. Foi uma atividade do RocketLab 2026.2.</p>
               <div class="ex-links"><a href="https://github.com/LucassTml/CineLab_RocketLab2026.2" target="_blank" rel="noopener">Código</a></div>
             </article>
             <article class="ex-item" tabindex="0" data-code="https://github.com/LucassTml/PortfolioXP">
-              <span class="ex-ico"><svg class="xi"><use href="#x-folder"/></svg><svg class="xi em"><use href="#x-globe"/></svg></span>
+              <span class="ex-ico"><svg class="xi"><use href="#p-portfolio"/></svg></span>
               <h3 class="ex-name">PortfolioXP</h3><span class="ex-c2">JavaScript</span><span class="ex-c3">Este site</span>
               <p class="ex-desc">Este site. Um sistema operacional de mentira, feito com HTML, CSS e JavaScript, sem biblioteca nenhuma.</p>
               <div class="ex-links"><a href="https://github.com/LucassTml/PortfolioXP" target="_blank" rel="noopener">Código</a></div>
@@ -344,7 +376,7 @@ Dá dois cliques nos outros ícones da área de trabalho pra ver o resto.
           <h4 class="ex-group">Dados</h4>
           <div class="ex-items">
             <article class="ex-item" tabindex="0" data-code="https://github.com/LucassTml/CineData-Analytics-DataBricks">
-              <span class="ex-ico"><svg class="xi"><use href="#x-folder"/></svg><svg class="xi em"><use href="#x-chart"/></svg></span>
+              <span class="ex-ico"><svg class="xi"><use href="#p-cinedata"/></svg></span>
               <h3 class="ex-name">CineData Analytics</h3><span class="ex-c2">Jupyter</span><span class="ex-c3">Arquitetura medalhão</span>
               <p class="ex-desc">Arquitetura medalhão (bronze, prata e ouro) no Databricks, feita no RocketLab 2026.2 da Visagio.</p>
               <div class="ex-links"><a href="https://github.com/LucassTml/CineData-Analytics-DataBricks" target="_blank" rel="noopener">Código</a></div>
@@ -354,13 +386,13 @@ Dá dois cliques nos outros ícones da área de trabalho pra ver o resto.
           <h4 class="ex-group">Jogos e algoritmos</h4>
           <div class="ex-items">
             <article class="ex-item" tabindex="0" data-code="https://github.com/LucassTml/Projeto-TowerDefense">
-              <span class="ex-ico"><svg class="xi"><use href="#x-folder"/></svg><svg class="xi em"><use href="#x-invader"/></svg></span>
+              <span class="ex-ico"><svg class="xi"><use href="#p-tower"/></svg></span>
               <h3 class="ex-name">Tower Defense</h3><span class="ex-c2">Java</span><span class="ex-c3">Jogo em Java (Swing)</span>
               <p class="ex-desc">Um tower defense completo, feito em Java com a biblioteca Swing.</p>
               <div class="ex-links"><a href="https://github.com/LucassTml/Projeto-TowerDefense" target="_blank" rel="noopener">Código</a></div>
             </article>
             <article class="ex-item" tabindex="0" data-code="https://github.com/LucassTml/Grade-Horaria-UPE-Modelagem_Problema_Grafos">
-              <span class="ex-ico"><svg class="xi"><use href="#x-folder"/></svg><svg class="xi em"><use href="#x-maze"/></svg></span>
+              <span class="ex-ico"><svg class="xi"><use href="#p-grade"/></svg></span>
               <h3 class="ex-name">Grade Horária UPE</h3><span class="ex-c2">Grafos</span><span class="ex-c3">Modelagem de problema</span>
               <p class="ex-desc">Minha parte na Equipe Astro da disciplina de Teoria dos Grafos: modelar o problema da grade horária da UPE de um jeito que o resto do time entendesse, em diagrama e em texto, sempre ligado ao código.</p>
               <div class="ex-links"><a href="https://github.com/LucassTml/Grade-Horaria-UPE-Modelagem_Problema_Grafos" target="_blank" rel="noopener">Código</a></div>

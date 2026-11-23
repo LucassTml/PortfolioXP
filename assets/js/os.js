@@ -51,7 +51,7 @@ const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const norm = s => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 const isTyping = t => !!t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName));
-const icon = (name, cls = 'xi') => `<svg class="${cls}" aria-hidden="true"><use href="#x-${name}"/></svg>`;
+const icon = (name, cls = 'xi') => `<svg class="${cls}" aria-hidden="true"><use href="#${name.startsWith('p-') ? name : 'x-' + name}"/></svg>`;
 const wait = ms => new Promise(r => setTimeout(r, ms));
 const APP = Object.fromEntries(APPS.map(a => [a.id, a]));
 
@@ -283,8 +283,8 @@ function buildWindow(el) {
 
 function place(w, pos) {
   const el = w.el, hr = hostRect();
-  const W = Math.min(+el.dataset.w || 520, hr.width - 16);
-  const H = Math.min(+el.dataset.h || 420, hr.height - 16);
+  const W = Math.min((pos && pos.w) || +el.dataset.w || 520, hr.width - 16);
+  const H = Math.min((pos && pos.h) || +el.dataset.h || 420, hr.height - 16);
   let x, y;
   if (pos) { x = pos.x; y = pos.y; }
   else {
@@ -987,7 +987,8 @@ function searchIndex(q) {
   $$('[data-app="projetos"] .ex-item').forEach(it => {
     const name = it.querySelector('.ex-name').textContent;
     const href = it.dataset.site || it.dataset.code;
-    items.push({ title: name, sub: 'Projeto: ' + it.querySelector('.ex-c3').textContent, icon: 'folder', words: `${name} ${it.querySelector('.ex-c2').textContent} ${it.querySelector('.ex-desc').textContent}`, run: () => window.open(href, '_blank', 'noopener') });
+    const ico = it.querySelector('.ex-ico use').getAttribute('href').replace('#x-', '').replace('#', '');
+    items.push({ title: name, sub: 'Projeto: ' + it.querySelector('.ex-c3').textContent, icon: ico, words: `${name} ${it.querySelector('.ex-c2').textContent} ${it.querySelector('.ex-desc').textContent}`, run: () => window.open(href, '_blank', 'noopener') });
   });
   [['tema azul', 'Esquema de cores Azul', () => { setSetting('theme', 'xp'); setSetting('scheme', 'azul'); }],
    ['tema verde-oliva', 'Esquema de cores Verde-oliva', () => { setSetting('theme', 'xp'); setSetting('scheme', 'oliva'); }],
@@ -1031,11 +1032,14 @@ function openBootWindows() {
   const hr = hostRect();
   const iconsRight = Math.max(...$$('.dicon:not(.corner)').map(d => d.getBoundingClientRect().right), 100) + 14;
   const proj = wins.get('projetos'), sobre = wins.get('sobre');
+  // "Sobre Mim" à esquerda e "Meus Projetos" à direita, na frente; lado a lado quando a tela permite.
   const pw = Math.min(+proj.el.dataset.w, hr.width - 16);
-  place(proj, { x: Math.max(iconsRight + 170, hr.width - pw - 30), y: 64 });
-  place(sobre, { x: iconsRight, y: 18 });
-  openApp('projetos', { silent: true });
+  const free = hr.width - iconsRight - 12;
+  const sw = clamp(free - pw - 10, 420, 560);
+  place(sobre, { x: iconsRight, y: 16, w: sw, h: Math.min(560, hr.height - 40) });
+  place(proj, { x: Math.max(iconsRight + 140, iconsRight + sw + 10, hr.width - pw - 10), y: 40 });
   openApp('sobre', { silent: true });
+  openApp('projetos', { silent: true });
 }
 function startDesktop(delayBalloon) {
   const hashId = location.hash.slice(1);
@@ -1047,8 +1051,8 @@ function startDesktop(delayBalloon) {
     setTimeout(() => balloon({
       title: 'Bem-vindo ao LucasOS',
       text: isMobile()
-        ? 'Toque em um ícone para abrir. O botão iniciar tem todos os programas.'
-        : 'Dê dois cliques em um ícone para abrir. O botão iniciar tem todos os programas, e Ctrl+K abre o Executar.',
+        ? 'Meus projetos estão na pasta Meus Projetos. Toque em qualquer ícone para abrir.'
+        : 'Meus projetos estão na pasta Meus Projetos, já aberta. Dê dois cliques nos outros ícones para ver o resto.',
     }), delayBalloon);
   }
   resetIdle();

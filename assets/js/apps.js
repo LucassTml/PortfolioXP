@@ -42,7 +42,7 @@ const isTyping = t => !!t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const nextFrame = () => new Promise(r => requestAnimationFrame(() => r()));
 const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
-const svgIcon = name => { const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); s.setAttribute('class', 'xi'); s.innerHTML = `<use href="#x-${name}"/>`; return s; };
+const svgIcon = name => { const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); s.setAttribute('class', 'xi'); s.innerHTML = `<use href="#${name.startsWith('p-') ? name : 'x-' + name}"/>`; return s; };
 const MONO = '"Lucida Console", Consolas, monospace';
 // Escuta comandos de menu (data-cmd) de uma janela específica.
 const onCmd = (id, fn) => document.addEventListener('lucasos:cmd', e => { if (e.detail.id === id) fn(e.detail.cmd, e.detail.el); });
@@ -143,6 +143,14 @@ function explorer(id, win) {
   function show(it) {
     if (details) {
       details.replaceChildren();
+      // Ícone grande no topo do painel "Detalhes", como no XP.
+      const ico = (it ? it.querySelector('.ex-ico .xi') : win.querySelector('.t-icon'));
+      if (ico) {
+        const c = svgIcon('folder');
+        c.setAttribute('class', 'xi tp-ico');
+        c.innerHTML = `<use href="${ico.querySelector('use').getAttribute('href')}"/>`;
+        details.append(c);
+      }
       if (it) {
         details.append(el('b', null, it.querySelector('.ex-name').textContent));
         details.append(el('span', 'tp-sub', [it.querySelector('.ex-c2'), it.querySelector('.ex-c3')].filter(Boolean).map(x => x.textContent).join(' | ')));

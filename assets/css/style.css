@@ -337,6 +337,14 @@ input[type="range"]{accent-color:#316ac5;width:110px;vertical-align:middle}
 .tp-details p{margin:0 0 6px}
 .ex-view{position:relative;flex:1;min-width:0;overflow:auto;background:#fff;padding:6px 12px 12px;border-top:1px solid #fff}
 .ex-header{display:none}
+.ex-intro{display:flex;gap:12px;align-items:flex-start;padding:8px 2px 12px;margin-bottom:2px;background:linear-gradient(90deg,var(--group-line),rgba(255,255,255,0) 80%) left bottom/100% 2px no-repeat}
+.ex-intro > .xi{width:48px;height:48px;flex:none}
+.ex-intro h3{margin:2px 0 4px;font:bold 18px var(--font-title);color:#1e3287}
+.ex-intro p{margin:0 0 6px;max-width:640px}
+.ex-tip{display:inline-block;margin:2px 0 0!important;padding:3px 8px;background:#ffffe1;border:1px solid #c9c2a0}
+.ex-tip-narrow{display:none!important}
+[data-app="projetos"] .ex-name{font-weight:bold}
+.tp-ico{display:block;width:48px;height:48px;margin:0 0 6px}
 .ex-group{margin:10px 0 6px;padding-bottom:3px;font:bold 12px var(--font);color:#1e3287;background:linear-gradient(90deg,var(--group-line),rgba(255,255,255,0) 70%) left bottom/100% 1px no-repeat}
 .ex-items{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:4px 10px}
 .ex-item{display:grid;grid-template-columns:52px minmax(0,1fr);align-items:center;column-gap:6px;padding:3px;outline:none;cursor:default}
@@ -363,6 +371,9 @@ input[type="range"]{accent-color:#316ac5;width:110px;vertical-align:middle}
 .ex-empty{padding:16px;color:var(--gray)}
 @container (max-width:600px){
   .taskpane{display:none}
+  .ex-tip-wide{display:none!important}
+  .ex-tip-narrow{display:block!important}
+  .ex-intro > .xi{width:36px;height:36px}
   .explorer .ex-items,.explorer[data-view="details"] .ex-items{display:flex;flex-direction:column;gap:12px}
   .explorer .ex-item,.explorer[data-view="details"] .ex-item{grid-template-columns:40px minmax(0,1fr);align-items:start;padding:6px;border-bottom:1px solid #eee}
   .explorer .ex-ico,.explorer[data-view="details"] .ex-ico{grid-row:1 / span 5;width:36px;height:36px;margin:0}

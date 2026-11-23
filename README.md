@@ -28,7 +28,7 @@ Tudo foi feito com **HTML, CSS e JavaScript puros**, sem biblioteca, framework o
 |:---:|---|---|
 | 🖥️ | **Meu Computador** | "Propriedades do sistema" com um resumo sobre mim |
 | 📝 | **Sobre Mim** | Quem eu sou e o que estou fazendo agora, no Bloco de Notas |
-| 📁 | **Meus Projetos** | Pasta do Explorer com os projetos, painel de tarefas e detalhes de cada um |
+| 📁 | **Meus Projetos** | Pasta do Explorer com um ícone para cada projeto, separados por área, com descrição e links no painel de detalhes |
 | 🛠️ | **Habilidades** | Janela de propriedades com abas: linguagens, IA, web e dados, ferramentas e pessoal |
 | 🎓 | **Trajetória** | UPE, RocketLab 2026.2 (Visagio) e formação, em modo de exibição "Detalhes" |
 | 🐙 | **GitHub** | Navegador com meu perfil e meus repositórios, carregados ao vivo pela API do GitHub |
