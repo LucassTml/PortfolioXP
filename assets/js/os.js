@@ -1,14 +1,14 @@
 /* =============================================================
-   LucasOS 2.0 — núcleo do sistema
-   Gerenciador de janelas, barra de tarefas, menu Iniciar com busca,
-   personalização (tema/cor/papel de parede), sons, atalhos e rotas (#app).
-   Os aplicativos interativos ficam em apps.js e se registram via LucasOS.register().
+   LucasOS XP - núcleo do sistema
+   Janelas, barra de tarefas, menu iniciar, menus, abas, balões,
+   dicas, logon/logoff/desligar, proteção de tela e configurações.
+   Os programas ficam em apps.js e se registram com LucasOS.register().
    ============================================================= */
 (() => {
 'use strict';
 
 /* ============================================================
-   CONFIGURAÇÃO — edite aqui
+   CONFIGURAÇÃO
    ============================================================ */
 const CONFIG = {
   githubUser: 'LucassTml',
@@ -17,22 +17,25 @@ const CONFIG = {
   email: 'lemt99@gmail.com',
 };
 
-// Ordem = ordem dos ícones na área de trabalho e no menu Iniciar.
-// "href" transforma o ícone em atalho externo.
+// "desk" coloca o ícone na área de trabalho; "dialog" cria uma janela só com o botão fechar.
 const APPS = [
-  { id:'sobre',       title:'Sobre Mim',   icon:'user',     tile:'linear-gradient(135deg,#60a5fa,#2563eb)', keywords:'quem bio perfil lucas melo' },
-  { id:'projetos',    title:'Projetos',    icon:'folder',   tile:'linear-gradient(135deg,#fcd34d,#f59e0b)', keywords:'portfolio trabalhos repositorios' },
-  { id:'habilidades', title:'Habilidades', icon:'wrench',   tile:'linear-gradient(135deg,#fdba74,#ea580c)', keywords:'skills stack tecnologias linguagens' },
-  { id:'trajetoria',  title:'Trajetória',  icon:'cap',      tile:'linear-gradient(135deg,#c4b5fd,#7c3aed)', keywords:'formacao educacao experiencia upe rocketlab visagio curriculo' },
-  { id:'github',      title:'GitHub',      icon:'github',   tile:'linear-gradient(135deg,#64748b,#0f172a)', keywords:'repositorios codigo' },
-  { id:'contato',     title:'Contato',     icon:'mail',     tile:'linear-gradient(135deg,#6ee7b7,#059669)', keywords:'email telefone mensagem falar' },
-  { id:'linkedin',    title:'LinkedIn',    icon:'linkedin', tile:'linear-gradient(135deg,#38bdf8,#0a66c2)', keywords:'perfil profissional', href: CONFIG.linkedinUrl },
-  { id:'terminal',    title:'Terminal',    icon:'terminal', tile:'linear-gradient(135deg,#475569,#020617)', keywords:'cmd shell prompt console' },
-  { id:'invaders',    title:'Invasores',   icon:'invader',  tile:'linear-gradient(135deg,#4ade80,#15803d)', keywords:'jogo game nave espaco' },
-  { id:'hexagon',     title:'Hexágono',    icon:'hexagon',  tile:'linear-gradient(135deg,#f472b6,#be185d)', keywords:'jogo game reflexo' },
-  { id:'ordenacao',   title:'Ordenação',   icon:'chart',    tile:'linear-gradient(135deg,#22d3ee,#0369a1)', keywords:'sort algoritmos quick merge bubble heap' },
-  { id:'labirinto',   title:'Labirinto',   icon:'maze',     tile:'linear-gradient(135deg,#fdba74,#c2410c)', keywords:'maze bfs dfs dijkstra a* busca caminho grafos' },
-  { id:'bemvindo',    title:'Bem-vindo',   icon:'sparkles', tile:'linear-gradient(135deg,#f0abfc,#6366f1)', keywords:'ajuda dicas novidades sobre o site lucasos' },
+  { id: 'sistema', title: 'Meu Computador', win: 'Propriedades do sistema', icon: 'computer', desk: 1, dialog: 1, tip: 'Mostra informações sobre este computador e sobre o dono dele.', keys: 'sistema computador sobre' },
+  { id: 'sobre', title: 'Sobre Mim', win: 'Sobre Mim.txt - Bloco de Notas', icon: 'notepad', desk: 1, tip: 'Quem eu sou, o que estudo e o que estou fazendo agora.', keys: 'bloco de notas notepad txt quem' },
+  { id: 'projetos', title: 'Meus Projetos', icon: 'folder', desk: 1, tip: 'Projetos com links para o código e para os sites.', keys: 'portfolio repositorios pasta' },
+  { id: 'habilidades', title: 'Habilidades', win: 'Propriedades de Habilidades', icon: 'cpanel', desk: 1, dialog: 1, tip: 'Linguagens, ferramentas e o que eu uso no dia a dia.', keys: 'skills stack tecnologias linguagens' },
+  { id: 'trajetoria', title: 'Trajetória', icon: 'cap', desk: 1, tip: 'Faculdade, cursos e experiências.', keys: 'formacao curriculo upe rocketlab visagio' },
+  { id: 'github', title: 'GitHub', win: 'GitHub: LucassTml - Navegador', icon: 'github', desk: 1, tip: 'Meu perfil e meus repositórios, carregados ao vivo.', keys: 'navegador internet repositorios' },
+  { id: 'linkedin', title: 'LinkedIn', icon: 'linkedin', desk: 1, href: CONFIG.linkedinUrl, tip: 'Abre meu LinkedIn em uma nova aba.', keys: 'perfil profissional' },
+  { id: 'contato', title: 'Contato', win: 'Nova mensagem', icon: 'mail', desk: 1, tip: 'E-mail, telefone e um jeito rápido de me escrever.', keys: 'email mensagem telefone' },
+  { id: 'terminal', title: 'Prompt de Comando', icon: 'cmd', desk: 1, tip: 'Digite help para ver os comandos.', keys: 'cmd terminal console shell' },
+  { id: 'invaders', title: 'Invasores', icon: 'invader', desk: 1, group: 'jogos', tip: 'Jogo de nave com três fases e power-ups.', keys: 'jogo game nave' },
+  { id: 'hexagon', title: 'Hexágono', icon: 'hexagon', desk: 1, group: 'jogos', tip: 'Jogo de reflexo. Quanto tempo você aguenta?', keys: 'jogo game reflexo' },
+  { id: 'ordenacao', title: 'Ordenação', icon: 'chart', desk: 1, group: 'acessorios', tip: 'Algoritmos de ordenação funcionando passo a passo.', keys: 'sort algoritmos quick merge heap' },
+  { id: 'labirinto', title: 'Labirinto', icon: 'maze', desk: 1, group: 'acessorios', tip: 'Gera um labirinto e procura a saída com BFS, DFS, Dijkstra ou A*.', keys: 'maze grafos busca bfs dfs dijkstra' },
+  { id: 'lixeira', title: 'Lixeira', icon: 'recycle', desk: 'corner', tip: 'Versões antigas deste site.', keys: 'lixo versao antiga v1' },
+  { id: 'ajuda', title: 'Ajuda e suporte', icon: 'help', tip: 'Como usar o LucasOS.', keys: 'help ajuda atalhos' },
+  { id: 'executar', title: 'Executar', icon: 'run', dialog: 1, keys: 'run' },
+  { id: 'video', title: 'Propriedades de Vídeo', icon: 'display', dialog: 1, keys: 'painel de controle tema papel de parede aparencia protecao de tela cores' },
 ];
 
 /* ============================================================ */
@@ -41,82 +44,73 @@ const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 const root = document.documentElement;
 const mqMobile = matchMedia('(max-width: 760px)');
-const mqDark = matchMedia('(prefers-color-scheme: dark)');
 const mqReduce = matchMedia('(prefers-reduced-motion: reduce)');
 const mqCoarse = matchMedia('(pointer: coarse)');
 const isMobile = () => mqMobile.matches;
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
-const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const norm = s => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 const isTyping = t => !!t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName));
-const icon = (name, cls = 'ico') => `<svg class="${cls}" aria-hidden="true"><use href="#i-${name}"/></svg>`;
-const tileHTML = (app, extra = '') => `<span class="tile${extra}" style="background:${app.tile}">${icon(app.icon)}</span>`;
+const icon = (name, cls = 'xi') => `<svg class="${cls}" aria-hidden="true"><use href="#x-${name}"/></svg>`;
+const wait = ms => new Promise(r => setTimeout(r, ms));
 const APP = Object.fromEntries(APPS.map(a => [a.id, a]));
 
 const store = {
   get(k, d) { try { const v = localStorage.getItem('lucasos:' + k); return v === null ? d : JSON.parse(v); } catch { return d; } },
-  set(k, v) { try { localStorage.setItem('lucasos:' + k, JSON.stringify(v)); } catch { /* armazenamento indisponível */ } },
+  set(k, v) { try { localStorage.setItem('lucasos:' + k, JSON.stringify(v)); } catch { /* sem armazenamento */ } },
 };
 
 /* ---------------- Configurações ---------------- */
-const settings = {
-  theme: store.get('theme', 'moderno'),
-  scheme: store.get('scheme', 'auto'),
-  accent: store.get('accent', '#3d6bff'),
-  wallpaper: store.get('wallpaper', 'auto'),
-  sound: store.get('sound', true),
+const DEFAULTS = { theme: 'xp', scheme: 'azul', wallpaper: 'colinas', sound: true, effects: true, saver: 'logo', saverWait: 5 };
+const VALID = {
+  theme: ['xp', 'vista'], scheme: ['azul', 'oliva', 'prateado'], wallpaper: ['colinas', 'azul', 'aero', 'nenhum'],
+  saver: ['logo', 'estrelas', 'nenhuma'],
 };
-// Links com ?tema=xp|vista|moderno e ?modo=claro|escuro abrem no visual pedido (sem salvar).
-const query = new URLSearchParams(location.search);
-if (query.get('tema')) settings.theme = query.get('tema');
-if (query.get('modo') === 'escuro') settings.scheme = 'dark';
-else if (query.get('modo') === 'claro') settings.scheme = 'light';
-if (!['moderno', 'xp', 'vista'].includes(settings.theme)) settings.theme = 'moderno';
-const THEME_WP = { moderno: 'aurora', xp: 'colinas', vista: 'aero' };
-let customWallpaper = null; // { kind:'custom'|'hamster', url }
+const settings = {};
+Object.keys(DEFAULTS).forEach(k => {
+  const v = store.get(k, DEFAULTS[k]);
+  settings[k] = VALID[k] ? (VALID[k].includes(v) ? v : DEFAULTS[k]) : (typeof v === typeof DEFAULTS[k] ? v : DEFAULTS[k]);
+});
+settings.saverWait = clamp(Math.round(+settings.saverWait) || 5, 1, 60);
+// ?tema=azul|oliva|prateado|vista abre no visual pedido (sem salvar).
+const qTema = new URLSearchParams(location.search).get('tema');
+if (qTema === 'vista') settings.theme = 'vista';
+else if (VALID.scheme.includes(qTema)) { settings.theme = 'xp'; settings.scheme = qTema; }
 
+let customWp = null;
 function applySettings() {
-  const t = settings.theme;
-  // Sem transições durante a troca de tema (evita menus "voando" de um canto a outro).
-  root.classList.add('is-switching');
-  requestAnimationFrame(() => requestAnimationFrame(() => root.classList.remove('is-switching')));
-  const dark = t === 'moderno' && (settings.scheme === 'dark' || (settings.scheme === 'auto' && mqDark.matches));
-  root.dataset.theme = t;
-  root.dataset.scheme = dark ? 'dark' : 'light';
-  if (t === 'moderno') root.style.setProperty('--accent', settings.accent);
-  else root.style.removeProperty('--accent');
-  root.dataset.wp = customWallpaper ? customWallpaper.kind
-    : (settings.wallpaper === 'auto' ? THEME_WP[t] : settings.wallpaper);
+  root.dataset.theme = settings.theme;
+  root.dataset.scheme = settings.scheme;
+  root.dataset.wp = customWp ? customWp.kind : settings.wallpaper;
+  root.classList.toggle('no-fx', !settings.effects);
   const meta = $('meta[name="theme-color"]');
-  if (meta) meta.content = t === 'xp' ? '#245edc' : t === 'vista' ? '#1b4c8a' : dark ? '#070b17' : '#e8edf7';
-  syncQuick();
-  document.dispatchEvent(new CustomEvent('lucasos:theme', { detail: { ...settings, dark } }));
+  if (meta) meta.content = settings.theme === 'vista' ? '#1b2a3e' : { azul: '#245edc', oliva: '#8aa366', prateado: '#c8c8d4' }[settings.scheme];
+  syncTray();
+  document.dispatchEvent(new CustomEvent('lucasos:settings', { detail: { ...settings } }));
 }
-function setSetting(k, v) {
+function setSetting(k, v, persist = true) {
   settings[k] = v;
-  store.set(k, v);
-  if (k === 'wallpaper') clearCustomWallpaper();
+  if (persist) store.set(k, v);
+  if (k === 'wallpaper') clearCustomWp();
+  if (k === 'saver' || k === 'saverWait') resetIdle();
   applySettings();
 }
-mqDark.addEventListener('change', () => { if (settings.scheme === 'auto') applySettings(); });
-
 function setCustomWallpaper(kind, url) {
-  clearCustomWallpaper();
-  customWallpaper = { kind, url };
-  $('#desktop').style.setProperty('--wp-custom', `url("${url}")`);
+  clearCustomWp();
+  customWp = { kind, url };
+  root.style.setProperty('--wp-custom', `url("${url}")`);
   applySettings();
 }
-function clearCustomWallpaper() {
-  if (customWallpaper && customWallpaper.url.startsWith('blob:')) URL.revokeObjectURL(customWallpaper.url);
-  customWallpaper = null;
+function clearCustomWp() {
+  if (customWp && customWp.url.startsWith('blob:')) URL.revokeObjectURL(customWp.url);
+  customWp = null;
 }
 
-/* ---------------- Sons (Web Audio, sem arquivos) ---------------- */
+/* ---------------- Sons (sintetizados com Web Audio) ---------------- */
 const sfx = (() => {
   let ctx = null, unlocked = false;
-  const unlock = () => { unlocked = true; };
-  addEventListener('pointerdown', unlock, { once: true, capture: true });
-  addEventListener('keydown', unlock, { once: true, capture: true });
+  addEventListener('pointerdown', () => { unlocked = true; }, { once: true, capture: true });
+  addEventListener('keydown', () => { unlocked = true; }, { once: true, capture: true });
   function ensure() {
     if (!ctx) { try { ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch { return null; } }
     if (ctx.state === 'suspended') ctx.resume().catch(() => {});
@@ -129,7 +123,7 @@ const sfx = (() => {
       const t0 = c.currentTime + delay, o = c.createOscillator(), g = c.createGain();
       o.type = type; o.frequency.setValueAtTime(freq, t0);
       g.gain.setValueAtTime(0.0001, t0);
-      g.gain.exponentialRampToValueAtTime(vol, t0 + 0.008);
+      g.gain.exponentialRampToValueAtTime(vol, t0 + 0.01);
       g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
       o.connect(g).connect(c.destination);
       o.start(t0); o.stop(t0 + dur + 0.03);
@@ -137,83 +131,115 @@ const sfx = (() => {
   }
   return {
     tone,
-    click() { tone(920, 0.045, 'triangle', 0.03); },
-    open() { tone(520, 0.08, 'sine', 0.05); tone(780, 0.1, 'sine', 0.045, 0.05); },
-    close() { tone(620, 0.07, 'sine', 0.045); tone(380, 0.09, 'sine', 0.04, 0.05); },
-    error() { tone(196, 0.2, 'triangle', 0.07); },
-    boot() { [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => tone(f, 0.38, 'sine', 0.045, i * 0.11)); },
-    key() { tone(1150 + Math.random() * 250, 0.02, 'square', 0.01); },
-    pick() { tone(660, 0.07, 'triangle', 0.05); tone(990, 0.09, 'triangle', 0.045, 0.06); },
+    click() { tone(900, 0.03, 'triangle', 0.025); },
+    ding() { tone(880, 0.35, 'sine', 0.05); tone(1320, 0.3, 'sine', 0.025, 0.02); },
+    error() { tone(330, 0.12, 'square', 0.03); tone(247, 0.25, 'square', 0.03, 0.12); },
+    balloon() { tone(1046, 0.12, 'sine', 0.04); tone(1568, 0.18, 'sine', 0.03, 0.08); },
+    startup() { [392, 523.25, 659.25, 783.99, 1046.5].forEach((f, i) => tone(f, 0.5, 'sine', 0.04, i * 0.12)); },
+    logoff() { [783.99, 659.25, 523.25, 392].forEach((f, i) => tone(f, 0.4, 'sine', 0.04, i * 0.12)); },
+    key() { tone(1150 + Math.random() * 250, 0.02, 'square', 0.008); },
+    pick() { tone(660, 0.07, 'triangle', 0.045); tone(990, 0.09, 'triangle', 0.04, 0.06); },
     shoot() { tone(880, 0.05, 'square', 0.014); },
     hit() { tone(130, 0.16, 'sawtooth', 0.04); },
   };
 })();
-// Sininho de "boot" no primeiro gesto da sessão (navegadores bloqueiam áudio antes disso).
 addEventListener('pointerdown', () => {
   try { if (sessionStorage.getItem('lucasos:chime')) return; sessionStorage.setItem('lucasos:chime', '1'); } catch { /* ok */ }
-  setTimeout(() => sfx.boot(), 30);
+  if ($('#session').hidden) setTimeout(() => sfx.startup(), 40);
 }, { once: true });
 
-/* ---------------- Toasts ---------------- */
-const toastsEl = $('#toasts');
-function toast(msg, ico = 'info', ms = 3400) {
-  const el = document.createElement('div');
-  el.className = 'toast';
-  el.setAttribute('role', 'status');
-  el.innerHTML = icon(ico) + '<span></span>';
-  el.lastChild.textContent = msg;
-  toastsEl.append(el);
-  while (toastsEl.children.length > 3) toastsEl.firstElementChild.remove();
-  const kill = () => { if (!el.isConnected) return; el.classList.add('is-out'); setTimeout(() => el.remove(), 220); };
+/* ---------------- Dicas (tooltips amarelas) ---------------- */
+const tipEl = $('#tooltip');
+let tipTimer = 0, tipFor = null, mouseX = 0, mouseY = 0;
+function hideTip() { clearTimeout(tipTimer); tipEl.hidden = true; tipFor = null; }
+addEventListener('pointermove', e => { mouseX = e.clientX; mouseY = e.clientY; }, { passive: true });
+document.addEventListener('pointerover', e => {
+  if (e.pointerType !== 'mouse') return;
+  const t = e.target.closest('[data-tip]');
+  if (t === tipFor) return;
+  hideTip();
+  if (!t || !t.dataset.tip) return;
+  tipFor = t;
+  tipTimer = setTimeout(() => {
+    tipEl.textContent = t.dataset.tip;
+    tipEl.hidden = false;
+    const w = tipEl.offsetWidth, h = tipEl.offsetHeight;
+    tipEl.style.left = clamp(mouseX + 2, 4, innerWidth - w - 4) + 'px';
+    tipEl.style.top = (mouseY + 22 + h > innerHeight ? mouseY - h - 6 : mouseY + 22) + 'px';
+  }, 650);
+});
+document.addEventListener('pointerdown', hideTip, true);
+addEventListener('blur', hideTip);
+
+/* ---------------- Balões da área de notificação ---------------- */
+const balloonsEl = $('#balloons');
+function balloon({ title, text, ico = 'info', ms = 9000, anchor = $('.tray') }) {
+  $$('.balloon', balloonsEl).forEach(b => b.remove());
+  const b = document.createElement('div');
+  b.className = 'balloon';
+  b.setAttribute('role', 'status');
+  b.innerHTML = `<b>${icon(ico)}<span></span></b><p></p><button class="bx" type="button" aria-label="Fechar">x</button>`;
+  b.querySelector('span').textContent = title;
+  b.querySelector('p').textContent = text;
+  balloonsEl.append(b);
+  const ar = anchor.getBoundingClientRect(), bw = b.offsetWidth, bh = b.offsetHeight;
+  const cx = ar.left + Math.min(ar.width, 60) / 2;
+  const left = clamp(cx - bw + 30, 8, innerWidth - bw - 8);
+  b.style.left = left + 'px';
+  b.style.top = Math.max(8, ar.top - bh - 18) + 'px';
+  b.style.setProperty('--tail', clamp(left + bw - cx - 8, 10, bw - 30) + 'px');
+  sfx.balloon();
+  const kill = () => { if (!b.isConnected) return; b.classList.add('is-out'); setTimeout(() => b.remove(), 360); };
+  b.querySelector('.bx').addEventListener('click', kill);
   setTimeout(kill, ms);
-  el.addEventListener('click', kill);
 }
 
-/* ---------------- Diálogo ---------------- */
-const modal = $('#modal');
-let modalReturn = null;
-function showModal({ title, message, buttons }) {
-  sfx.error();
-  $('#modal-title').textContent = title;
-  $('#modal-msg').textContent = message;
-  const act = $('#modal-actions');
-  act.replaceChildren(...buttons.map(b => {
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'btn' + (b.primary ? ' btn-primary' : '');
-    btn.textContent = b.label;
-    btn.addEventListener('click', () => { hideModal(); if (b.onClick) b.onClick(); });
-    return btn;
+/* ---------------- Caixa de mensagem ---------------- */
+const msgEl = $('#msgbox');
+let msgResolve = null, msgReturn = null;
+function msgbox({ title = 'LucasOS', text = '', ico = 'info', buttons = ['OK'] } = {}) {
+  if (msgResolve) closeMsg(null);
+  $('#msg-title').textContent = title;
+  $('#msg-text').textContent = text;
+  $('#msg-icon use').setAttribute('href', '#x-' + ico);
+  const box = $('#msg-buttons');
+  box.replaceChildren(...buttons.map((label, i) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'btn'; b.textContent = label;
+    b.addEventListener('click', () => closeMsg(i));
+    return b;
   }));
-  modalReturn = document.activeElement;
-  modal.hidden = false;
-  (act.querySelector('.btn-primary') || act.firstElementChild).focus();
+  msgReturn = document.activeElement;
+  msgEl.hidden = false;
+  box.firstElementChild.focus();
+  if (ico === 'error') sfx.error(); else sfx.ding();
+  return new Promise(res => { msgResolve = res; });
 }
-function hideModal() {
-  modal.hidden = true;
-  if (modalReturn && modalReturn.focus) modalReturn.focus({ preventScroll: true });
+function closeMsg(result) {
+  msgEl.hidden = true;
+  const r = msgResolve; msgResolve = null;
+  if (r) r(result);
+  if (msgReturn && msgReturn.focus) msgReturn.focus({ preventScroll: true });
 }
-modal.addEventListener('click', e => { if (e.target === modal) hideModal(); });
-modal.addEventListener('keydown', e => {
-  if (e.key !== 'Tab') return;
-  const f = $$('button', modal); const i = f.indexOf(document.activeElement);
-  e.preventDefault();
-  f[(i + (e.shiftKey ? -1 : 1) + f.length) % f.length].focus();
+$('[data-msg-close]').addEventListener('click', () => closeMsg(null));
+msgEl.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { e.stopPropagation(); closeMsg(null); }
+  if (e.key === 'Tab') {
+    const f = $$('button', msgEl), i = f.indexOf(document.activeElement);
+    e.preventDefault();
+    f[(i + (e.shiftKey ? -1 : 1) + f.length) % f.length].focus();
+  }
 });
 
 /* ============================================================
-   GERENCIADOR DE JANELAS
+   JANELAS
    ============================================================ */
 const windowsHost = $('#windows');
 const tasksEl = $('#tasks');
-const snapEl = $('#snap');
 const wins = new Map();
 const inits = {};
 let zTop = 20, cascadeN = 0, activeWin = null;
-
 const hostRect = () => windowsHost.getBoundingClientRect();
-const rectOf = w => { const s = w.el.style; return { left: parseFloat(s.left) || 0, top: parseFloat(s.top) || 0, width: parseFloat(s.width) || 400, height: parseFloat(s.height) || 300 }; };
-const applyRect = (w, r) => Object.assign(w.el.style, { left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px' });
 
 function buildWindow(el) {
   const id = el.dataset.app, app = APP[id];
@@ -221,99 +247,108 @@ function buildWindow(el) {
   const bar = document.createElement('header');
   bar.className = 'titlebar';
   bar.innerHTML =
-    `<button class="t-btn t-back" type="button" data-act="back" aria-label="Voltar">${icon('back')}</button>` +
-    `<span class="t-tile" style="background:${app.tile}">${icon(app.icon)}</span>` +
-    `<h2 class="t-title" id="wt-${id}"></h2>` +
-    `<div class="t-controls">` +
-      `<button class="t-btn" type="button" data-act="min" aria-label="Minimizar" title="Minimizar">${icon('min')}</button>` +
-      `<button class="t-btn" type="button" data-act="max" aria-label="Maximizar" title="Maximizar">${icon('max')}</button>` +
-      `<button class="t-btn t-close" type="button" data-act="close" aria-label="Fechar" title="Fechar">${icon('x')}</button>` +
-    `</div>`;
-  bar.querySelector('.t-title').textContent = app.title;
+    `<svg class="t-icon" aria-hidden="true"><use href="#x-${app.icon}"/></svg><h2 class="t-title" id="wt-${id}"></h2><div class="t-controls">` +
+    (app.dialog ? '' :
+      `<button class="t-btn" type="button" data-act="min" aria-label="Minimizar" data-tip="Minimizar"><svg><use href="#tb-min"/></svg></button>` +
+      `<button class="t-btn" type="button" data-act="max" aria-label="Maximizar" data-tip="Maximizar"><svg><use href="#tb-max"/></svg></button>`) +
+    `<button class="t-btn t-close" type="button" data-act="close" aria-label="Fechar" data-tip="Fechar"><svg><use href="#tb-close"/></svg></button></div>`;
+  bar.querySelector('.t-title').textContent = app.win || app.title;
   el.prepend(bar);
-  el.removeAttribute('aria-label');
   el.setAttribute('role', 'dialog');
   el.setAttribute('aria-labelledby', 'wt-' + id);
   el.tabIndex = -1;
-  ['se', 'e', 's'].forEach(dir => {
+  if (app.dialog) el.classList.add('no-resize');
+  else ['se', 'e', 's'].forEach(dir => {
     const h = document.createElement('div');
-    h.className = 'resize'; h.dataset.dir = dir; h.setAttribute('aria-hidden', 'true');
+    h.className = 'resize'; h.dataset.dir = dir;
     el.append(h);
   });
-
-  const w = { id, app, el, bar, open: false, min: false, placed: false, prev: null, snapped: null, inited: false, task: null };
+  const w = { id, app, el, bar, open: false, min: false, placed: false, inited: false, task: null, busy: false };
   wins.set(id, w);
-
   el.addEventListener('pointerdown', () => focusWin(w), true);
   bar.addEventListener('click', e => {
     const b = e.target.closest('[data-act]'); if (!b) return;
     const act = b.dataset.act;
     if (act === 'close') closeWin(w);
     else if (act === 'max') toggleMax(w);
-    else if (act === 'back' && isMobile() && history.state && history.state.lucasos === id) history.back();
-    else minimize(w);
+    else if (act === 'min') {
+      if (isMobile() && history.state && history.state.lucasos === id) history.back();
+      else minimize(w);
+    }
   });
-  bar.addEventListener('dblclick', e => { if (!e.target.closest('.t-btn') && !isMobile()) toggleMax(w); });
+  bar.addEventListener('dblclick', e => { if (!e.target.closest('.t-btn') && !app.dialog && !isMobile()) toggleMax(w); });
   bar.addEventListener('pointerdown', e => startDrag(e, w));
   $$('.resize', el).forEach(h => h.addEventListener('pointerdown', e => startResize(e, w, h)));
 }
 
 function place(w, pos) {
   const el = w.el, hr = hostRect();
-  const W = Math.min(+el.dataset.w || 560, hr.width - 24);
-  const H = Math.min(+el.dataset.h || 480, hr.height - 24);
+  const W = Math.min(+el.dataset.w || 520, hr.width - 16);
+  const H = Math.min(+el.dataset.h || 420, hr.height - 16);
   let x, y;
   if (pos) { x = pos.x; y = pos.y; }
   else {
-    const n = cascadeN++ % 7;
-    x = (hr.width - W) / 2 + (n - 3) * 26;
-    y = (hr.height - H) / 2 + (n - 3) * 22;
+    const n = cascadeN++ % 8;
+    x = Math.max(24, (hr.width - W) / 2 - 90) + n * 26;
+    y = Math.max(16, (hr.height - H) / 2 - 70) + n * 26;
   }
-  x = clamp(x, 8, Math.max(8, hr.width - W - 8));
-  y = clamp(y, 8, Math.max(8, hr.height - H - 8));
-  applyRect(w, { left: Math.round(x), top: Math.round(y), width: Math.round(W), height: Math.round(H) });
+  x = clamp(x, 4, Math.max(4, hr.width - W - 4));
+  y = clamp(y, 4, Math.max(4, hr.height - H - 4));
+  Object.assign(el.style, { left: Math.round(x) + 'px', top: Math.round(y) + 'px', width: Math.round(W) + 'px', height: Math.round(H) + 'px' });
   w.placed = true;
 }
 
-function replayAnim(el, cls) {
-  if (mqReduce.matches) return;
-  el.classList.remove(cls);
-  void el.offsetWidth;
-  el.classList.add(cls);
-  const end = e => { if (e.target !== el) return; el.classList.remove(cls); el.removeEventListener('animationend', end); };
-  el.addEventListener('animationend', end);
+const fx = () => settings.effects && !mqReduce.matches;
+// Animação de "retângulo" do XP ao minimizar, restaurar e maximizar.
+function ghost(from, to, ms = 210) {
+  if (!fx() || !from || !to || isMobile()) return Promise.resolve();
+  const g = document.createElement('div');
+  g.className = 'zoom-ghost';
+  document.body.append(g);
+  const f = r => ({ left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px' });
+  const a = g.animate([f(from), f(to)], { duration: ms, easing: 'ease-in-out', fill: 'forwards' });
+  return a.finished.catch(() => {}).then(() => g.remove());
+}
+const captionRect = w => { const r = w.el.getBoundingClientRect(); return { left: r.left, top: r.top, width: r.width, height: 30 }; };
+const taskRect = w => {
+  if (w.task) { const r = w.task.getBoundingClientRect(); return { left: r.left, top: r.top, width: r.width, height: r.height }; }
+  return { left: 0, top: innerHeight - 28, width: 150, height: 24 };
+};
+
+function busyCursor(ms) {
+  if (!fx()) return Promise.resolve();
+  root.classList.add('is-busy');
+  return wait(ms).then(() => root.classList.remove('is-busy'));
 }
 
 function emitVis(w) {
   document.dispatchEvent(new CustomEvent('lucasos:visibility', { detail: { id: w.id, visible: w.open && !w.min } }));
 }
 
-function openApp(id, opts = {}) {
+async function openApp(id, opts = {}) {
   const app = APP[id]; if (!app) return;
-  setFlyout(null);
-  if (app.href) { sfx.click(); window.open(app.href, '_blank', 'noopener'); return; }
-  const w = wins.get(id); if (!w) return;
-  if (!w.open) {
-    if (!w.placed) place(w, opts.pos);
-    w.open = true; w.min = false;
-    w.el.classList.remove('is-min', 'is-closing');
-    w.el.classList.add('is-open');
-    replayAnim(w.el, 'is-entering');
-    if (!opts.silent) sfx.open();
-    addTask(w);
-    if (!w.inited && inits[id]) {
-      w.inited = true;
-      try { inits[id](w.el, API); } catch (err) { console.error('[LucasOS] falha ao iniciar', id, err); }
-    }
-    emitVis(w);
-  } else if (w.min) {
-    restore(w);
+  closeMenus();
+  closeStart();
+  if (app.href) { window.open(app.href, '_blank', 'noopener'); return; }
+  const w = wins.get(id); if (!w || w.busy) return;
+  if (w.open) {
+    if (w.min) restore(w); else focusWin(w, { focusEl: true });
+    return;
+  }
+  w.busy = true;
+  if (!opts.silent) await busyCursor(240);   // o cursor de "trabalhando" do XP
+  if (!w.placed) place(w, opts.pos);
+  w.open = true; w.min = false; w.busy = false;
+  w.el.classList.remove('is-min', 'is-hidden');
+  w.el.classList.add('is-open');
+  addTask(w);
+  if (!w.inited && inits[id]) {
+    w.inited = true;
+    try { inits[id](w.el, API); } catch (err) { console.error('[LucasOS] falha ao iniciar', id, err); }
   }
   focusWin(w, { focusEl: !opts.silent });
-  if (!opts.silent) {
-    if (isMobile()) { try { history.pushState({ lucasos: id }, '', '#' + id); } catch { /* ok */ } }
-    else setHash(id);
-  }
+  emitVis(w);
+  if (!opts.silent) route(id);
 }
 
 function focusWin(w, { focusEl = false } = {}) {
@@ -327,147 +362,111 @@ function focusWin(w, { focusEl = false } = {}) {
     document.dispatchEvent(new CustomEvent('lucasos:focus', { detail: { id: w.id } }));
   }
   if (focusEl && !w.el.contains(document.activeElement) && !mqCoarse.matches) {
-    const auto = w.el.querySelector('[data-autofocus]');
-    (auto || w.el).focus({ preventScroll: true });
+    (w.el.querySelector('[data-autofocus]') || w.el).focus({ preventScroll: true });
   }
 }
-
 function focusTop() {
   let best = null, bz = -1;
   wins.forEach(o => { if (o.open && !o.min) { const z = +o.el.style.zIndex || 0; if (z > bz) { bz = z; best = o; } } });
-  if (best) focusWin(best); else updateTasks();
+  if (best) focusWin(best); else { activeWin = null; updateTasks(); }
 }
 
 function minimize(w) {
   if (!w.open || w.min) return;
-  sfx.click();
+  const from = captionRect(w);
   w.min = true;
   w.el.classList.add('is-min');
   w.el.classList.remove('is-active');
   if (activeWin === w) { activeWin = null; focusTop(); }
   updateTasks(); emitVis(w);
+  ghost(from, taskRect(w));
   if (location.hash === '#' + w.id) setHash('');
 }
-function restore(w) {
+async function restore(w) {
+  if (!w.min) return;
+  const from = taskRect(w);
+  await ghost(from, captionRect(w));
   w.min = false;
   w.el.classList.remove('is-min');
   focusWin(w);
   updateTasks(); emitVis(w);
 }
-
 function closeWin(w) {
   if (!w.open) return;
-  sfx.close();
   w.open = false; w.min = false;
-  w.el.classList.remove('is-active', 'is-entering');
-  const finish = () => { if (!w.open) w.el.classList.remove('is-open', 'is-closing', 'is-min'); };
-  if (mqReduce.matches) finish();
-  else {
-    w.el.classList.add('is-closing');
-    const t = setTimeout(finish, 240);
-    const end = e => { if (e.target !== w.el) return; w.el.removeEventListener('animationend', end); clearTimeout(t); finish(); };
-    w.el.addEventListener('animationend', end);
-  }
+  w.el.classList.remove('is-open', 'is-active', 'is-min');
   removeTask(w);
   if (activeWin === w) { activeWin = null; focusTop(); }
   emitVis(w);
   if (location.hash === '#' + w.id) setHash('');
+  document.dispatchEvent(new CustomEvent('lucasos:closed', { detail: { id: w.id } }));
 }
-
 function setMaxIcon(w, on) {
   const b = w.bar.querySelector('[data-act="max"]');
-  b.innerHTML = icon(on ? 'restore' : 'max');
+  if (!b) return;
+  b.querySelector('use').setAttribute('href', on ? '#tb-restore' : '#tb-max');
   b.setAttribute('aria-label', on ? 'Restaurar' : 'Maximizar');
-  b.title = b.getAttribute('aria-label');
+  b.dataset.tip = b.getAttribute('aria-label');
 }
-function toggleMax(w) { w.el.classList.contains('is-max') ? unmax(w) : maximize(w); }
-function maximize(w) { sfx.click(); w.el.classList.add('is-max'); setMaxIcon(w, true); focusWin(w); }
-function unmax(w) { sfx.click(); w.el.classList.remove('is-max'); setMaxIcon(w, false); }
-
-function snapTo(w, zone) {
-  if (zone === 'max') { if (w.snapped && w.prev) applyRect(w, w.prev); w.snapped = null; maximize(w); return; }
-  const hr = hostRect();
-  if (!w.snapped) w.prev = rectOf(w);
-  w.snapped = zone;
-  applyRect(w, { left: zone === 'left' ? 0 : Math.round(hr.width / 2), top: 0, width: Math.round(hr.width / 2), height: Math.round(hr.height) });
-}
-function showSnap(zone) {
-  if (!zone) { snapEl.hidden = true; return; }
-  const hr = hostRect(), g = 6, half = hr.width / 2;
-  const r = zone === 'max' ? [g, g, hr.width - 2 * g, hr.height - 2 * g]
-    : zone === 'left' ? [g, g, half - 1.5 * g, hr.height - 2 * g]
-    : [half + g / 2, g, half - 1.5 * g, hr.height - 2 * g];
-  Object.assign(snapEl.style, { left: r[0] + 'px', top: r[1] + 'px', width: r[2] + 'px', height: r[3] + 'px' });
-  snapEl.hidden = false;
+async function toggleMax(w) {
+  if (w.app.dialog) return;
+  const from = captionRect(w);
+  const on = !w.el.classList.contains('is-max');
+  w.el.classList.add('is-hidden');
+  w.el.classList.toggle('is-max', on);
+  setMaxIcon(w, on);
+  await ghost(from, captionRect(w));
+  w.el.classList.remove('is-hidden');
+  focusWin(w);
 }
 
 function startDrag(e, w) {
   if (e.button !== 0 || e.target.closest('.t-btn') || isMobile()) return;
   const el = w.el, bar = w.bar, hr = hostRect();
   const sx = e.clientX, sy = e.clientY, r = el.getBoundingClientRect();
-  let ox = r.left - hr.left, oy = r.top - hr.top, moved = false, zone = null;
+  let ox = r.left - hr.left, oy = r.top - hr.top, moved = false;
   try { bar.setPointerCapture(e.pointerId); } catch { /* ok */ }
   const move = ev => {
     const dx = ev.clientX - sx, dy = ev.clientY - sy;
     if (!moved) {
-      if (Math.abs(dx) + Math.abs(dy) < 5) return;
+      if (Math.abs(dx) + Math.abs(dy) < 4) return;
       moved = true;
-      el.classList.add('is-dragging');
       document.body.style.userSelect = 'none';
-      if (el.classList.contains('is-max') || w.snapped) {
-        // "Desencaixa" mantendo o cursor na mesma proporção da barra de título.
+      if (el.classList.contains('is-max')) {
         const ratio = (sx - r.left) / r.width;
-        if (w.snapped && w.prev) { el.style.width = w.prev.width + 'px'; el.style.height = w.prev.height + 'px'; }
-        el.classList.remove('is-max'); setMaxIcon(w, false); w.snapped = null;
+        el.classList.remove('is-max'); setMaxIcon(w, false);
         ox = sx - hr.left - ratio * (parseFloat(el.style.width) || r.width);
         oy = 0;
       }
     }
-    const nx = clamp(ox + dx, -el.offsetWidth + 100, hr.width - 100);
-    const ny = clamp(oy + dy, 0, hr.height - 44);
-    el.style.left = nx + 'px'; el.style.top = ny + 'px';
-    const z = ev.clientY <= hr.top + 2 ? 'max' : ev.clientX <= 2 ? 'left' : ev.clientX >= innerWidth - 3 ? 'right' : null;
-    if (z !== zone) { zone = z; showSnap(zone); }
+    el.style.left = clamp(ox + dx, -el.offsetWidth + 80, hr.width - 80) + 'px';
+    el.style.top = clamp(oy + dy, 0, hr.height - 30) + 'px';
   };
   const up = () => {
     bar.removeEventListener('pointermove', move);
     bar.removeEventListener('pointerup', up);
     bar.removeEventListener('pointercancel', up);
-    el.classList.remove('is-dragging');
     document.body.style.userSelect = '';
-    if (zone) snapTo(w, zone);
-    showSnap(null);
   };
   bar.addEventListener('pointermove', move);
   bar.addEventListener('pointerup', up);
   bar.addEventListener('pointercancel', up);
 }
-
 function startResize(e, w, h) {
   if (e.button !== 0 || isMobile() || w.el.classList.contains('is-max')) return;
   e.preventDefault(); e.stopPropagation();
   focusWin(w);
   const el = w.el, dir = h.dataset.dir, sx = e.clientX, sy = e.clientY, r = el.getBoundingClientRect(), hr = hostRect();
-  const minW = parseFloat(getComputedStyle(el).minWidth) || 300, minH = 200;
   try { h.setPointerCapture(e.pointerId); } catch { /* ok */ }
-  el.classList.add('is-resizing');
-  w.snapped = null;
   const move = ev => {
-    if (dir !== 's') el.style.width = clamp(r.width + ev.clientX - sx, minW, hr.right - r.left) + 'px';
-    if (dir !== 'e') el.style.height = clamp(r.height + ev.clientY - sy, minH, hr.bottom - r.top) + 'px';
+    if (dir !== 's') el.style.width = clamp(r.width + ev.clientX - sx, 260, hr.right - r.left) + 'px';
+    if (dir !== 'e') el.style.height = clamp(r.height + ev.clientY - sy, 150, hr.bottom - r.top) + 'px';
   };
-  const up = () => {
-    h.removeEventListener('pointermove', move);
-    h.removeEventListener('pointerup', up);
-    h.removeEventListener('pointercancel', up);
-    el.classList.remove('is-resizing');
-  };
+  const up = () => { h.removeEventListener('pointermove', move); h.removeEventListener('pointerup', up); h.removeEventListener('pointercancel', up); };
   h.addEventListener('pointermove', move);
   h.addEventListener('pointerup', up);
   h.addEventListener('pointercancel', up);
 }
-
-// Mantém as janelas alcançáveis quando o navegador muda de tamanho.
 let resizeT;
 addEventListener('resize', () => {
   clearTimeout(resizeT);
@@ -476,13 +475,11 @@ addEventListener('resize', () => {
     const hr = hostRect();
     wins.forEach(w => {
       if (!w.placed) return;
-      if (w.snapped) { const z = w.snapped; w.snapped = null; snapTo(w, z); return; }
-      const r = rectOf(w);
-      r.width = Math.min(r.width, hr.width - 16);
-      r.height = Math.min(r.height, hr.height - 16);
-      r.left = clamp(r.left, -r.width + 100, Math.max(0, hr.width - 100));
-      r.top = clamp(r.top, 0, Math.max(0, hr.height - 44));
-      applyRect(w, r);
+      const s = w.el.style;
+      const W = Math.min(parseFloat(s.width), hr.width - 8), H = Math.min(parseFloat(s.height), hr.height - 8);
+      s.width = W + 'px'; s.height = H + 'px';
+      s.left = clamp(parseFloat(s.left), -W + 80, Math.max(0, hr.width - 80)) + 'px';
+      s.top = clamp(parseFloat(s.top), 0, Math.max(0, hr.height - 30)) + 'px';
     });
   }, 120);
 });
@@ -493,12 +490,12 @@ function addTask(w) {
   const b = document.createElement('button');
   b.type = 'button';
   b.className = 'task';
-  b.title = w.app.title;
-  b.setAttribute('aria-label', w.app.title);
-  b.innerHTML = `<span class="tile" style="background:${w.app.tile}">${icon(w.app.icon)}</span><span class="task-label"></span>`;
-  b.querySelector('.task-label').textContent = w.app.title;
+  const title = w.app.win || w.app.title;
+  b.dataset.tip = title;
+  b.setAttribute('aria-label', title);
+  b.innerHTML = `${icon(w.app.icon)}<span></span>`;
+  b.querySelector('span').textContent = title;
   b.addEventListener('click', () => {
-    sfx.click();
     if (w.min) restore(w);
     else if (activeWin === w) minimize(w);
     else focusWin(w);
@@ -512,29 +509,38 @@ function updateTasks() {
     if (!w.task) return;
     const on = activeWin === w && !w.min;
     w.task.classList.toggle('is-active', on);
-    w.task.classList.toggle('is-min', w.min);
     w.task.setAttribute('aria-pressed', String(on));
   });
 }
-
-const clockTime = $('#clock .time'), clockDate = $('#clock .date');
+const clockEl = $('#clock');
 function tick() {
   const d = new Date();
-  clockTime.textContent = d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-  clockTime.dateTime = d.toISOString();
-  clockDate.textContent = d.toLocaleDateString('pt-BR');
+  clockEl.textContent = d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  clockEl.dateTime = d.toISOString();
+  clockEl.dataset.tip = d.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 }
+const traySound = $('#tray-sound');
+function syncTray() {
+  traySound.querySelector('use').setAttribute('href', settings.sound ? '#x-speaker' : '#x-speaker-off');
+  traySound.setAttribute('aria-pressed', String(settings.sound));
+  traySound.dataset.tip = settings.sound ? 'Volume (clique para silenciar)' : 'Sem som (clique para ativar)';
+}
+traySound.addEventListener('click', () => { setSetting('sound', !settings.sound); if (settings.sound) sfx.click(); });
+$('#tray-display').addEventListener('click', () => openApp('video'));
 
-/* ---------------- Rotas: #app abre o app ---------------- */
+/* ---------------- Rotas (#app) ---------------- */
 function setHash(id) {
   try { history.replaceState(history.state, '', id ? '#' + id : location.pathname + location.search); } catch { /* ok */ }
+}
+function route(id) {
+  if (isMobile()) { try { history.pushState({ lucasos: id }, '', '#' + id); } catch { /* ok */ } }
+  else setHash(id);
 }
 addEventListener('hashchange', () => {
   const id = location.hash.slice(1);
   if (APP[id] && !APP[id].href) openApp(id, { silent: true });
 });
 addEventListener('popstate', () => {
-  // No celular, o botão "voltar" do aparelho fecha (minimiza) o app aberto.
   if (!isMobile()) return;
   const id = location.hash.slice(1);
   let top = null, bz = -1;
@@ -543,312 +549,478 @@ addEventListener('popstate', () => {
 });
 
 /* ============================================================
-   ÁREA DE TRABALHO, MENUS E PERSONALIZAÇÃO
+   MENUS, ABAS E COMANDOS
    ============================================================ */
-const startBtn = $('#start-btn'), startMenu = $('#start-menu'), smInput = $('#sm-input');
-const smHome = $('#sm-home'), smResults = $('#sm-results');
-const quick = $('#quick'), trayQuick = $('#tray-quick'), traySound = $('#tray-sound'), qsSound = $('#qs-sound');
 const ctxMenu = $('#ctx');
-
-function renderIcons() {
-  const nav = $('#icons');
-  nav.innerHTML = APPS.map(a =>
-    `<button class="dicon" type="button" data-app="${a.id}" title="${esc(a.title)}${a.href ? ' (abre em nova aba)' : ''}">` +
-    `${tileHTML(a, a.href ? ' is-link' : '')}<span class="dicon-label">${esc(a.title)}</span></button>`).join('');
-  let lastPointer = 'mouse';
-  nav.addEventListener('pointerdown', e => { lastPointer = e.pointerType; });
-  nav.addEventListener('click', e => {
-    const b = e.target.closest('.dicon'); if (!b) return;
-    // Toque, celular ou teclado (Enter/Espaço) abrem direto; mouse seleciona e o duplo clique abre.
-    if (e.detail === 0 || lastPointer !== 'mouse' || isMobile()) { openApp(b.dataset.app); return; }
-    $$('.dicon.is-selected').forEach(d => d.classList.remove('is-selected'));
-    b.classList.add('is-selected');
-    sfx.click();
-  });
-  nav.addEventListener('dblclick', e => {
-    const b = e.target.closest('.dicon');
-    if (b && lastPointer === 'mouse' && !isMobile()) openApp(b.dataset.app);
-  });
-}
-
-/* Menu Iniciar + busca */
-let INDEX = [], results = [], sel = 0;
-function projectInfo(card) {
-  const ic = card.querySelector('.project-icon');
-  const link = card.querySelector('.plink');
-  return {
-    title: card.querySelector('h3').textContent.trim(),
-    desc: card.querySelector('p').textContent.trim(),
-    tags: card.querySelector('.tags') ? card.querySelector('.tags').textContent : '',
-    href: link ? link.href : CONFIG.githubUrl,
-    icon: ic.querySelector('use').getAttribute('href').replace('#i-', ''),
-    tile: ic.style.getPropertyValue('--g'),
-  };
-}
-function buildIndex() {
-  const items = [];
-  APPS.forEach(a => items.push({ kind: 'App', title: a.title, desc: a.href ? 'Abre em nova aba' : 'Abrir aplicativo', keywords: a.keywords, icon: a.icon, tile: a.tile, run: () => openApp(a.id) }));
-  const CAT_WORDS = { ia: 'ia inteligencia artificial agentes llm', web: 'web site', dados: 'dados data analytics', algo: 'algoritmos jogos game' };
-  $$('#project-grid .project').forEach(card => {
-    const p = projectInfo(card);
-    const keywords = card.dataset.cat.split(' ').map(c => CAT_WORDS[c] || c).join(' ');
-    items.push({ ...p, keywords, kind: 'Projeto', run: () => window.open(p.href, '_blank', 'noopener') });
-  });
-  const gray = 'linear-gradient(135deg,#94a3b8,#475569)';
-  [
-    ['Tema Moderno', 'Visual atual, claro ou escuro', 'palette', () => setSetting('theme', 'moderno')],
-    ['Tema XP', 'Visual clássico Luna', 'palette', () => setSetting('theme', 'xp')],
-    ['Tema Vista', 'Visual Aero com vidro', 'palette', () => setSetting('theme', 'vista')],
-    ['Modo escuro', 'Tema Moderno escuro', 'moon', () => { settings.theme = 'moderno'; store.set('theme', 'moderno'); setSetting('scheme', 'dark'); }],
-    ['Modo claro', 'Tema Moderno claro', 'sun', () => { settings.theme = 'moderno'; store.set('theme', 'moderno'); setSetting('scheme', 'light'); }],
-    ['Ligar ou desligar sons', 'Efeitos sonoros do sistema', 'volume', () => setSound(!settings.sound)],
-    ['Personalizar', 'Tema, cor de destaque e papel de parede', 'palette', () => setFlyout('quick')],
-    ['Copiar e-mail', CONFIG.email, 'copy', () => copyText(CONFIG.email)],
-    ['Encerrar sessão', 'Desligar o LucasOS', 'power', askShutdown],
-  ].forEach(([title, desc, ic, run]) => items.push({ kind: 'Comando', title, desc, icon: ic, tile: gray, keywords: 'comando configuracao tema', run }));
-  // Busca por início de palavra ("ia" acha "IA", mas não "tecnologias").
-  items.forEach(it => { it.words = norm([it.title, it.desc, it.keywords, it.tags].filter(Boolean).join(' ')).split(/[^a-z0-9*#+]+/).filter(Boolean); });
-  return items;
-}
-function itemHTML(it, i) {
-  return `<button class="sm-item" type="button" role="option" data-idx="${i}">` +
-    `<span class="mini" style="background:${it.tile}">${icon(it.icon)}</span>` +
-    `<span class="grow"><b>${esc(it.title)}</b><small>${esc(it.desc || '')}</small></span>` +
-    `<span class="kind">${it.kind}</span></button>`;
-}
-function renderStart() {
-  $('#sm-apps').innerHTML = APPS.map(a =>
-    `<button class="sm-app" type="button" data-app="${a.id}">${tileHTML(a, a.href ? ' is-link' : '')}<span>${esc(a.title)}</span></button>`).join('');
-  $('#sm-featured').innerHTML = $$('#project-grid .project.is-featured').map(card => {
-    const p = projectInfo(card);
-    return `<a class="sm-item" href="${esc(p.href)}" target="_blank" rel="noopener">` +
-      `<span class="mini" style="background:${p.tile}">${icon(p.icon)}</span>` +
-      `<span class="grow"><b>${esc(p.title)}</b><small>${esc(p.desc)}</small></span>${icon('external')}</a>`;
-  }).join('');
-  INDEX = buildIndex();
-}
-function runSearch(q) {
-  const nq = norm(q.trim());
-  if (!nq) { smHome.hidden = false; smResults.hidden = true; results = []; return; }
-  const toks = nq.split(/\s+/);
-  results = INDEX
-    .map(it => {
-      if (!toks.every(t => it.words.some(w => w.startsWith(t)))) return null;
-      const nt = norm(it.title);
-      const s = (nt.startsWith(nq) ? 10 : nt.includes(nq) ? 5 : 0) + (it.kind === 'App' ? 2 : it.kind === 'Projeto' ? 1 : 0);
-      return { it, s };
-    })
-    .filter(Boolean).sort((a, b) => b.s - a.s).slice(0, 9).map(x => x.it);
-  sel = 0;
-  smHome.hidden = true; smResults.hidden = false;
-  smResults.innerHTML = results.length ? results.map(itemHTML).join('')
-    : `<div class="sm-empty">Nada encontrado para “${esc(q.trim())}”. Tente “jogo”, “IA” ou “tema”.</div>`;
-  markSel();
-}
-function markSel() {
-  $$('.sm-item', smResults).forEach((b, i) => { b.classList.toggle('is-sel', i === sel); b.setAttribute('aria-selected', String(i === sel)); });
-  const cur = smResults.children[sel];
-  if (cur && cur.scrollIntoView) cur.scrollIntoView({ block: 'nearest' });
-}
-function activate(it) { setFlyout(null); sfx.click(); it.run(); }
-
-smInput.addEventListener('input', () => runSearch(smInput.value));
-smInput.addEventListener('keydown', e => {
-  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-    if (!results.length) return;
-    e.preventDefault();
-    sel = (sel + (e.key === 'ArrowDown' ? 1 : -1) + results.length) % results.length;
-    markSel();
-  } else if (e.key === 'Enter') {
-    e.preventDefault();
-    if (results[sel]) activate(results[sel]);
-  }
-});
-smResults.addEventListener('click', e => { const b = e.target.closest('.sm-item'); if (b) activate(results[+b.dataset.idx]); });
-$('#sm-apps').addEventListener('click', e => { const b = e.target.closest('[data-app]'); if (b) openApp(b.dataset.app); });
-$('#sm-featured').addEventListener('click', e => { if (e.target.closest('a')) setFlyout(null); });
-
-/* Flyouts: menu Iniciar, Personalizar, menu de contexto */
-function flyoutOpen() {
-  return startMenu.classList.contains('is-open') ? 'start' : quick.classList.contains('is-open') ? 'quick' : null;
-}
-function setFlyout(name) {
-  const s = name === 'start', q = name === 'quick';
-  startMenu.classList.toggle('is-open', s); startBtn.setAttribute('aria-expanded', String(s));
-  quick.classList.toggle('is-open', q); trayQuick.setAttribute('aria-expanded', String(q));
+function closeMenus() {
+  $$('.mb.is-open').forEach(m => m.classList.remove('is-open'));
+  $$('.menubar.is-active').forEach(m => m.classList.remove('is-active'));
   ctxMenu.classList.remove('is-open');
-  if (s) {
-    smInput.value = ''; runSearch('');
-    smHome.parentElement.scrollTop = 0;
-    if (!mqCoarse.matches) requestAnimationFrame(() => smInput.focus({ preventScroll: true }));
-  }
 }
-startBtn.addEventListener('click', () => { sfx.click(); setFlyout(flyoutOpen() === 'start' ? null : 'start'); });
-trayQuick.addEventListener('click', () => { sfx.click(); setFlyout(flyoutOpen() === 'quick' ? null : 'quick'); });
-$('#sm-power').addEventListener('click', askShutdown);
-
-quick.addEventListener('click', e => {
-  const b = e.target.closest('[data-value]'); if (!b) return;
-  const group = b.closest('[data-setting]'); if (!group) return;
-  sfx.click();
-  setSetting(group.dataset.setting, b.dataset.value);
-});
-function syncQuick() {
-  $$('[data-setting]', quick).forEach(g => {
-    const k = g.dataset.setting;
-    $$('[data-value]', g).forEach(b => b.setAttribute('aria-pressed', String(!(k === 'wallpaper' && customWallpaper) && b.dataset.value === settings[k])));
-  });
-  $('.qs-modern', quick).hidden = settings.theme !== 'moderno';
-  qsSound.setAttribute('aria-checked', String(settings.sound));
-  traySound.innerHTML = icon(settings.sound ? 'volume' : 'mute');
-  traySound.setAttribute('aria-pressed', String(settings.sound));
-  traySound.setAttribute('aria-label', settings.sound ? 'Sons ativados' : 'Sons desativados');
-}
-function setSound(on) { setSetting('sound', on); if (on) sfx.click(); }
-traySound.addEventListener('click', () => setSound(!settings.sound));
-qsSound.addEventListener('click', () => setSound(!settings.sound));
-
-const wpInput = $('#wallpaper-input');
-$('#qs-upload').addEventListener('click', () => wpInput.click());
-wpInput.addEventListener('change', () => {
-  const f = wpInput.files && wpInput.files[0];
-  if (!f) return;
-  setCustomWallpaper('custom', URL.createObjectURL(f));
-  wpInput.value = '';
-  toast('Papel de parede aplicado (vale até recarregar a página).', 'image');
-});
-
-$('#desktop').addEventListener('contextmenu', e => {
-  if (isTyping(e.target) || e.target.closest('a')) return;
-  e.preventDefault();
-  setFlyout(null);
-  ctxMenu.classList.add('is-open');
-  const r = ctxMenu.getBoundingClientRect();
-  ctxMenu.style.left = Math.min(e.clientX, innerWidth - r.width - 6) + 'px';
-  ctxMenu.style.top = Math.min(e.clientY, innerHeight - r.height - 6) + 'px';
-  ctxMenu.querySelector('button').focus({ preventScroll: true });
-});
-ctxMenu.addEventListener('click', e => {
-  const b = e.target.closest('[data-ctx]'); if (!b) return;
-  ctxMenu.classList.remove('is-open');
-  const a = b.dataset.ctx;
-  if (a === 'quick') setFlyout('quick');
-  else if (a === 'wallpaper') wpInput.click();
-  else if (a === 'terminal') openApp('terminal');
-  else if (a === 'about') openApp('bemvindo');
-});
-
-// Clique fora fecha menus e desmarca ícones.
-document.addEventListener('pointerdown', e => {
-  const t = e.target;
-  const open = flyoutOpen();
-  if (open === 'start' && !t.closest('#start-menu, #start-btn')) setFlyout(null);
-  if (open === 'quick' && !t.closest('#quick, #tray-quick')) setFlyout(null);
-  if (!t.closest('#ctx')) ctxMenu.classList.remove('is-open');
-  if (!t.closest('.dicon')) $$('.dicon.is-selected').forEach(d => d.classList.remove('is-selected'));
-}, true);
-
-// Atalhos globais.
-document.addEventListener('keydown', e => {
-  if ((e.ctrlKey || e.metaKey) && !e.altKey && e.key.toLowerCase() === 'k') {
-    e.preventDefault(); setFlyout(flyoutOpen() === 'start' ? null : 'start'); return;
-  }
-  if (e.key === '/' && !isTyping(e.target) && modal.hidden) { e.preventDefault(); setFlyout('start'); return; }
-  if (e.key === 'Escape') {
-    if (!modal.hidden) { hideModal(); return; }
-    const open = flyoutOpen();
-    if (open || ctxMenu.classList.contains('is-open')) {
-      setFlyout(null);
-      (open === 'quick' ? trayQuick : startBtn).focus({ preventScroll: true });
-    }
-  }
-});
-
-/* ---------------- Conteúdo das janelas ---------------- */
 document.addEventListener('click', e => {
-  const o = e.target.closest('[data-open]');
-  if (o) { e.preventDefault(); openApp(o.dataset.open); return; }
-  const c = e.target.closest('[data-copy]');
-  if (c) copyText(c.dataset.copy);
+  const mbBtn = e.target.closest('.mb-btn');
+  if (mbBtn) {
+    const mb = mbBtn.parentElement, wasOpen = mb.classList.contains('is-open');
+    closeMenus();
+    if (!wasOpen) { mb.classList.add('is-open'); mb.parentElement.classList.add('is-active'); }
+    return;
+  }
+  const cmd = e.target.closest('[data-cmd]');
+  if (cmd && !cmd.disabled) { e.preventDefault(); runCmd(cmd.dataset.cmd, cmd); closeMenus(); return; }
+  const copy = e.target.closest('[data-copy]');
+  if (copy) { copyText(copy.dataset.copy); closeMenus(); return; }
+  const tab = e.target.closest('.tab');
+  if (tab) {
+    const host = tab.closest('[data-tabs]');
+    $$('.tab', host).forEach(t => t.setAttribute('aria-selected', String(t === tab)));
+    $$('.tabpanel', host).forEach(p => { p.hidden = p.dataset.panel !== tab.dataset.tab; });
+    return;
+  }
+  const scroll = e.target.closest('[data-scroll]');
+  if (scroll) {
+    e.preventDefault();
+    const t = document.getElementById(scroll.getAttribute('href').slice(1));
+    if (t) t.scrollIntoView({ block: 'start', behavior: fx() ? 'smooth' : 'auto' });
+    return;
+  }
+  if (e.target.closest('.mb .menu button, .mb .menu a, #ctx button')) closeMenus();
 });
+document.addEventListener('pointerover', e => {
+  const b = e.target.closest('.mb-btn');
+  if (b && b.closest('.menubar.is-active') && !b.parentElement.classList.contains('is-open')) {
+    closeMenus();
+    b.parentElement.classList.add('is-open');
+    b.closest('.menubar').classList.add('is-active');
+  }
+});
+function runCmd(cmd, el) {
+  const winEl = el.closest('#windows .window');
+  const w = winEl ? wins.get(winEl.dataset.app) : null;
+  if (cmd === 'close' && w) return closeWin(w);
+  if (cmd === 'min' && w) return minimize(w);
+  if (cmd === 'max' && w) return toggleMax(w);
+  if (cmd.startsWith('app:')) return openApp(cmd.slice(4));
+  if (cmd === 'noop') return;
+  document.dispatchEvent(new CustomEvent('lucasos:cmd', { detail: { cmd, id: w ? w.id : null, el, win: winEl } }));
+}
 
 async function copyText(text) {
   try { await navigator.clipboard.writeText(text); }
   catch {
     const ta = document.createElement('textarea');
-    ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
     document.body.append(ta); ta.select();
     try { document.execCommand('copy'); } catch { /* ok */ }
     ta.remove();
   }
-  sfx.pick();
-  toast('Copiado: ' + text, 'check');
-}
-
-function setupProjects() {
-  const cards = $$('#project-grid .project'), count = $('#project-count'), filters = $$('.filter');
-  const apply = f => {
-    let n = 0;
-    cards.forEach(c => { const show = f === 'all' || c.dataset.cat.split(' ').includes(f); c.hidden = !show; if (show) n++; });
-    count.textContent = n + (n === 1 ? ' projeto' : ' projetos');
-  };
-  filters.forEach(b => b.addEventListener('click', () => {
-    filters.forEach(x => x.setAttribute('aria-pressed', String(x === b)));
-    apply(b.dataset.filter);
-    sfx.click();
-  }));
-  apply('all');
-}
-
-function setupCompose() {
-  const form = $('#compose');
-  form.addEventListener('submit', e => {
-    e.preventDefault();
-    const nome = form.nome.value.trim(), assunto = form.assunto.value.trim(), msg = form.mensagem.value.trim();
-    if (!msg) { form.mensagem.focus(); toast('Escreva uma mensagem antes de continuar.', 'info'); return; }
-    const subject = assunto || ('Contato pelo portfólio' + (nome ? ' — ' + nome : ''));
-    const body = msg + (nome ? '\n\n— ' + nome : '');
-    location.href = `mailto:${CONFIG.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  });
-}
-
-/* ---------------- Encerrar sessão ---------------- */
-function askShutdown() {
-  setFlyout(null);
-  showModal({
-    title: 'Encerrar sessão',
-    message: 'Quer mesmo desligar o LucasOS? Dá pra ligar de novo com um clique.',
-    buttons: [{ label: 'Continuar navegando' }, { label: 'Desligar', primary: true, onClick: shutdown }],
-  });
-}
-function shutdown() {
-  sfx.close();
-  const sd = $('#shutdown');
-  sd.hidden = false;
-  const wake = () => {
-    removeEventListener('keydown', wake);
-    sd.removeEventListener('click', wake);
-    try { sessionStorage.removeItem('lucasos:booted'); } catch { /* ok */ }
-    location.replace(location.pathname + location.search);
-  };
-  setTimeout(() => { addEventListener('keydown', wake); sd.addEventListener('click', wake); }, 700);
+  balloon({ title: 'Copiado', text: text + ' foi copiado para a área de transferência.', ms: 4000 });
 }
 
 /* ============================================================
-   API pública (usada por apps.js)
+   ÁREA DE TRABALHO
+   ============================================================ */
+const desktop = $('#desktop');
+const iconsEl = $('#icons');
+let binEmpty = store.get('bin-empty', false);
+const iconOf = a => a.id === 'lixeira' && binEmpty ? 'recycle-empty' : a.icon;
+
+function renderIcons() {
+  iconsEl.innerHTML = APPS.filter(a => a.desk).map(a =>
+    `<button class="dicon${a.desk === 'corner' ? ' corner' : ''}" type="button" data-app="${a.id}" data-tip="${esc(a.tip || '')}">` +
+    `<span class="ico${a.href ? ' is-link' : ''}">${icon(iconOf(a))}</span><span class="lbl">${esc(a.title)}</span></button>`).join('');
+}
+let lastPointer = 'mouse';
+iconsEl.addEventListener('pointerdown', e => { lastPointer = e.pointerType; });
+iconsEl.addEventListener('click', e => {
+  const b = e.target.closest('.dicon'); if (!b) return;
+  if (e.detail === 0 || lastPointer !== 'mouse' || isMobile()) { openApp(b.dataset.app); return; }
+  if (!(e.ctrlKey || e.metaKey)) $$('.dicon.is-sel').forEach(d => d.classList.remove('is-sel'));
+  b.classList.toggle('is-sel', e.ctrlKey || e.metaKey ? !b.classList.contains('is-sel') : true);
+});
+iconsEl.addEventListener('dblclick', e => {
+  const b = e.target.closest('.dicon');
+  if (b && lastPointer === 'mouse' && !isMobile()) openApp(b.dataset.app);
+});
+iconsEl.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  const sel = $$('.dicon.is-sel');
+  if (sel.length > 1) { e.preventDefault(); sel.forEach(d => openApp(d.dataset.app)); }
+});
+
+// Retângulo de seleção ao arrastar na área de trabalho.
+const lasso = $('#lasso');
+desktop.addEventListener('pointerdown', e => {
+  if (e.button !== 0 || e.pointerType !== 'mouse' || e.target.closest('.dicon') || isMobile()) return;
+  $$('.dicon.is-sel').forEach(d => d.classList.remove('is-sel'));
+  const dr = desktop.getBoundingClientRect(), sx = e.clientX, sy = e.clientY;
+  let on = false;
+  try { desktop.setPointerCapture(e.pointerId); } catch { /* ok */ }
+  const icons = $$('.dicon').map(d => ({ d, r: d.getBoundingClientRect() }));
+  const move = ev => {
+    const x = clamp(ev.clientX, dr.left, dr.right), y = clamp(ev.clientY, dr.top, dr.bottom);
+    if (!on && Math.abs(x - sx) + Math.abs(y - sy) < 4) return;
+    on = true;
+    const l = Math.min(sx, x), t = Math.min(sy, y), r = Math.max(sx, x), b = Math.max(sy, y);
+    Object.assign(lasso.style, { left: l - dr.left + 'px', top: t - dr.top + 'px', width: r - l + 'px', height: b - t + 'px' });
+    lasso.hidden = false;
+    icons.forEach(({ d, r: ir }) => d.classList.toggle('is-sel', ir.left < r && ir.right > l && ir.top < b && ir.bottom > t));
+  };
+  const up = () => {
+    lasso.hidden = true;
+    desktop.removeEventListener('pointermove', move);
+    desktop.removeEventListener('pointerup', up);
+    desktop.removeEventListener('pointercancel', up);
+  };
+  desktop.addEventListener('pointermove', move);
+  desktop.addEventListener('pointerup', up);
+  desktop.addEventListener('pointercancel', up);
+});
+
+desktop.addEventListener('contextmenu', e => {
+  if (e.target.closest('a') || isTyping(e.target)) return;
+  e.preventDefault();
+  closeStart();
+  closeMenus();
+  ctxMenu.classList.add('is-open');
+  const r = ctxMenu.getBoundingClientRect();
+  ctxMenu.style.left = Math.min(e.clientX, innerWidth - r.width - 4) + 'px';
+  ctxMenu.style.top = Math.min(e.clientY, innerHeight - r.height - 4) + 'px';
+});
+ctxMenu.addEventListener('click', e => {
+  const b = e.target.closest('[data-ctx]'); if (!b) return;
+  ctxMenu.classList.remove('is-open');
+  const a = b.dataset.ctx;
+  if (a === 'refresh' || a === 'arrange') {
+    // O "piscar" dos ícones ao atualizar a área de trabalho.
+    $$('.dicon').forEach(d => d.classList.add('is-refresh'));
+    setTimeout(() => { renderIcons(); }, 140);
+  } else if (a === 'run') openApp('executar');
+  else if (a === 'props') openApp('video');
+});
+
+/* ============================================================
+   MENU INICIAR
+   ============================================================ */
+const startBtn = $('#start-btn'), startMenu = $('#start-menu'), allProg = $('#all-programs');
+function smItem(id, opts = {}) {
+  const a = APP[id];
+  const label = opts.label || a.title;
+  const inner = opts.sub
+    ? `${icon(iconOf(a))}<span><b>${esc(label)}</b><small>${esc(opts.sub)}</small></span>`
+    : `${icon(iconOf(a))}<span>${esc(label)}</span>`;
+  const cls = `sm-item${opts.sub ? ' two' : ''}${opts.bold ? ' bold' : ''}`;
+  return a.href
+    ? `<a class="${cls}" href="${esc(a.href)}" target="_blank" rel="noopener" role="menuitem" data-tip="${esc(a.tip || '')}">${inner}</a>`
+    : `<button class="${cls}" type="button" role="menuitem" data-app="${id}" data-tip="${esc(a.tip || '')}">${inner}</button>`;
+}
+function renderStart() {
+  $('#sm-left').innerHTML =
+    smItem('github', { sub: 'Meu perfil e repositórios', bold: true }) +
+    smItem('contato', { label: 'E-mail', sub: CONFIG.email, bold: true }) +
+    '<div class="sm-sep"></div>' +
+    ['sobre', 'projetos', 'terminal', 'invaders', 'hexagon', 'labirinto'].map(id => smItem(id)).join('') +
+    '<div class="sm-spacer"></div><div class="sm-sep"></div>' +
+    '<button class="sm-item sm-all" type="button" id="sm-all" aria-haspopup="menu">Todos os programas<span class="arrow"></span></button>';
+  $('#sm-right').innerHTML =
+    smItem('projetos', { bold: true }) + smItem('trajetoria', { bold: true }) + smItem('habilidades', { bold: true }) + smItem('sistema', { bold: true }) +
+    '<div class="sm-sep"></div>' +
+    smItem('video', { label: 'Painel de controle' }) + smItem('linkedin') + smItem('lixeira') +
+    '<div class="sm-sep"></div>' +
+    smItem('ajuda') + smItem('executar', { label: 'Executar...' });
+  const prog = id => { const a = APP[id]; return a.href
+    ? `<a role="menuitem" href="${esc(a.href)}" target="_blank" rel="noopener">${icon(a.icon)}${esc(a.title)}</a>`
+    : `<button type="button" role="menuitem" data-app="${id}">${icon(a.icon)}${esc(a.title)}</button>`; };
+  const group = (label, ids) => `<div class="sub-host"><button type="button" role="menuitem" class="has-sub" aria-haspopup="menu">${icon('folder')}${label}</button><div class="menu sub" role="menu">${ids.map(prog).join('')}</div></div>`;
+  allProg.innerHTML =
+    group('Acessórios', ['sobre', 'terminal', 'ordenacao', 'labirinto', 'executar']) +
+    group('Jogos', ['invaders', 'hexagon']) +
+    '<hr>' + ['github', 'linkedin', 'contato', 'projetos', 'trajetoria', 'habilidades', 'sistema', 'ajuda'].map(prog).join('');
+}
+function openStart() {
+  closeMenus();
+  startMenu.classList.add('is-open');
+  startBtn.setAttribute('aria-expanded', 'true');
+  hideTip();
+}
+function closeStart() {
+  startMenu.classList.remove('is-open');
+  allProg.classList.remove('is-open');
+  $$('.sub-host.is-open').forEach(s => s.classList.remove('is-open'));
+  startBtn.setAttribute('aria-expanded', 'false');
+}
+function openAllPrograms() {
+  const btn = $('#sm-all'); if (!btn) return;
+  allProg.classList.add('is-open');
+  if (isMobile()) return;
+  const left = $('#sm-left').getBoundingClientRect(), br = btn.getBoundingClientRect();
+  allProg.style.left = left.right - 4 + 'px';
+  allProg.style.top = 'auto';
+  allProg.style.bottom = (innerHeight - br.bottom) + 'px';
+}
+startBtn.addEventListener('click', () => {
+  if (startMenu.classList.contains('is-open')) closeStart(); else openStart();
+});
+startMenu.addEventListener('click', e => {
+  if (e.target.closest('#sm-all')) { allProg.classList.contains('is-open') ? allProg.classList.remove('is-open') : openAllPrograms(); return; }
+  const b = e.target.closest('[data-app]');
+  if (b) openApp(b.dataset.app);
+  else if (e.target.closest('a')) closeStart();
+});
+startMenu.addEventListener('pointerover', e => {
+  if (e.pointerType !== 'mouse') return;
+  if (e.target.closest('#sm-all')) openAllPrograms();
+  else if (e.target.closest('.sm-item')) allProg.classList.remove('is-open');
+});
+allProg.addEventListener('click', e => {
+  const host = e.target.closest('.sub-host > button');
+  if (host) { host.parentElement.classList.toggle('is-open'); return; }
+  const b = e.target.closest('[data-app]');
+  if (b) openApp(b.dataset.app);
+  else if (e.target.closest('a')) closeStart();
+});
+$('#sm-logoff').addEventListener('click', () => exitDialog('logoff'));
+$('#sm-shutdown').addEventListener('click', () => exitDialog('shutdown'));
+
+// Clique fora fecha menus.
+document.addEventListener('pointerdown', e => {
+  const t = e.target;
+  if (startMenu.classList.contains('is-open') && !t.closest('#start-menu, #start-btn, #all-programs')) closeStart();
+  if (!t.closest('.menubar') && !t.closest('#ctx')) closeMenus();
+}, true);
+
+document.addEventListener('keydown', e => {
+  if (!msgEl.hidden) return;
+  if ((e.ctrlKey || e.metaKey) && !e.altKey && e.key.toLowerCase() === 'k') { e.preventDefault(); openApp('executar'); return; }
+  if (e.key === '/' && !isTyping(e.target) && $('#session').hidden) { e.preventDefault(); openApp('executar'); return; }
+  if (e.key === 'Escape') {
+    if (!$('#exit-dlg').hidden) { closeExit(); return; }
+    if (startMenu.classList.contains('is-open')) { closeStart(); startBtn.focus(); return; }
+    closeMenus();
+  }
+});
+
+/* ============================================================
+   LOGON, LOGOFF E DESLIGAR
+   ============================================================ */
+const session = $('#session'), graying = $('#graying'), exitDlg = $('#exit-dlg'), blackout = $('#blackout');
+function showSession(mode, text) {
+  $$('.balloon').forEach(b => b.remove());
+  session.dataset.mode = mode;
+  if (text) $('#ss-big').textContent = text;
+  session.classList.remove('is-out');
+  session.hidden = false;
+  closeStart();
+}
+function hideSession() {
+  if (!fx()) { session.hidden = true; return; }
+  session.classList.add('is-out');
+  setTimeout(() => { session.hidden = true; session.classList.remove('is-out'); }, 500);
+}
+function showLogin() { showSession('login'); setTimeout(() => $('#ss-user').focus({ preventScroll: true }), 50); }
+$('#ss-user').addEventListener('click', async () => {
+  sfx.startup();
+  showSession('welcome', 'bem-vindo');
+  await wait(1300);
+  hideSession();
+  resetIdle();
+});
+$('#ss-power').addEventListener('click', () => exitDialog('shutdown'));
+
+const EXIT_OPTS = {
+  shutdown: [['standby', 'Em espera', 'standby'], ['off', 'Desativar', 'power'], ['restart', 'Reiniciar', 'restart']],
+  logoff: [['switch', 'Trocar usuário', 'switch'], ['logoff', 'Fazer logoff', 'logoff']],
+};
+function exitDialog(kind) {
+  closeStart();
+  closeMenus();
+  $$('.balloon').forEach(b => b.remove());
+  $('#exit-title').textContent = kind === 'logoff' ? 'Fazer logoff do LucasOS' : 'Desligar o computador';
+  $('#exit-body').innerHTML = EXIT_OPTS[kind].map(([act, label, ico]) =>
+    `<button class="exit-opt" type="button" data-exit="${act}">${icon(ico)}<span>${label}</span></button>`).join('');
+  graying.hidden = false;
+  if (session.hidden) requestAnimationFrame(() => requestAnimationFrame(() => graying.classList.add('is-on')));
+  exitDlg.hidden = false;
+  $('.exit-opt', exitDlg).focus();
+}
+function closeExit() {
+  exitDlg.hidden = true;
+  graying.classList.remove('is-on');
+  graying.hidden = true;
+}
+$('#exit-cancel').addEventListener('click', closeExit);
+$('#exit-body').addEventListener('click', async e => {
+  const b = e.target.closest('[data-exit]'); if (!b) return;
+  const act = b.dataset.exit;
+  closeExit();
+  if (act === 'standby') {
+    showBlackout('', () => {});
+  } else if (act === 'switch') {
+    showLogin();
+  } else if (act === 'logoff') {
+    sfx.logoff();
+    showSession('busy', 'Fazendo logoff...');
+    await wait(1400);
+    wins.forEach(w => closeWin(w));
+    showLogin();
+  } else if (act === 'off' || act === 'restart') {
+    sfx.logoff();
+    showSession('busy', act === 'off' ? 'O LucasOS está sendo desligado...' : 'Reiniciando...');
+    await wait(1700);
+    try { sessionStorage.removeItem('lucasos:booted'); } catch { /* ok */ }
+    if (act === 'restart') { location.replace(location.pathname + location.search); return; }
+    showBlackout('Agora é seguro desligar o computador.\nClique para ligar de novo.', () => location.replace(location.pathname + location.search));
+  }
+});
+function showBlackout(text, onWake) {
+  blackout.querySelector('p').textContent = text;
+  blackout.hidden = false;
+  const wake = () => {
+    removeEventListener('keydown', wake, true);
+    blackout.removeEventListener('pointerdown', wake);
+    blackout.hidden = true;
+    onWake();
+  };
+  setTimeout(() => {
+    addEventListener('keydown', wake, true);
+    blackout.addEventListener('pointerdown', wake);
+  }, 500);
+}
+
+/* ============================================================
+   PROTEÇÃO DE TELA
+   ============================================================ */
+const saverCanvas = $('#screensaver');
+let idleTimer = 0, saverOn = false, saverRaf = 0, saverStartedAt = 0, saverStartX = 0, saverStartY = 0;
+function resetIdle() {
+  clearTimeout(idleTimer);
+  if (settings.saver === 'nenhuma' || saverOn) return;
+  idleTimer = setTimeout(() => {
+    if (session.hidden && blackout.hidden && msgEl.hidden) startSaver(settings.saver);
+    else resetIdle();
+  }, settings.saverWait * 60000);
+}
+function onActivity(e) {
+  if (saverOn) {
+    if (performance.now() - saverStartedAt < 600) return;
+    if (e.type === 'pointermove' && Math.abs(e.clientX - saverStartX) + Math.abs(e.clientY - saverStartY) < 8) return;
+    stopSaver();
+    if (e.type !== 'pointermove') { e.preventDefault(); e.stopPropagation(); }
+  }
+  resetIdle();
+}
+['pointermove', 'pointerdown', 'keydown', 'wheel'].forEach(ev => addEventListener(ev, onActivity, { capture: true, passive: false }));
+
+function startSaver(kind) {
+  if (kind === 'nenhuma') return;
+  saverOn = true;
+  saverStartedAt = performance.now();
+  saverStartX = mouseX; saverStartY = mouseY;
+  hideTip();
+  const c = saverCanvas, ctx = c.getContext('2d');
+  const dpr = Math.min(devicePixelRatio || 1, 2);
+  c.width = innerWidth * dpr; c.height = innerHeight * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  c.hidden = false;
+  const W = innerWidth, H = innerHeight;
+  let draw;
+  if (kind === 'estrelas') {
+    const stars = Array.from({ length: 320 }, () => ({ x: (Math.random() - 0.5) * W, y: (Math.random() - 0.5) * H, z: Math.random() * W }));
+    draw = () => {
+      ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = '#fff';
+      for (const s of stars) {
+        s.z -= 6;
+        if (s.z <= 1) { s.x = (Math.random() - 0.5) * W; s.y = (Math.random() - 0.5) * H; s.z = W; }
+        const k = 200 / s.z, px = W / 2 + s.x * k, py = H / 2 + s.y * k, sz = Math.max(0.5, 2.6 - s.z / (W / 2.4));
+        if (px >= 0 && px < W && py >= 0 && py < H) ctx.fillRect(px, py, sz, sz);
+      }
+    };
+  } else {
+    // Logo que aparece, flutua e some em lugares diferentes da tela.
+    let x = 0, y = 0, t0 = 0;
+    const PERIOD = 6000;
+    const pick = () => { x = 40 + Math.random() * Math.max(10, W - 340); y = 40 + Math.random() * Math.max(10, H - 160); };
+    pick();
+    draw = ts => {
+      if (!t0) t0 = ts;
+      let p = (ts - t0) / PERIOD;
+      if (p >= 1) { t0 = ts; p = 0; pick(); }
+      const alpha = p < 0.2 ? p / 0.2 : p > 0.8 ? (1 - p) / 0.2 : 1;
+      ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H);
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.translate(x + p * 30, y);
+      const g = ctx.createLinearGradient(0, 0, 0, 64);
+      g.addColorStop(0, '#7fb8ff'); g.addColorStop(0.5, '#2f78e6'); g.addColorStop(1, '#1450b8');
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.roundRect ? ctx.roundRect(0, 0, 64, 64, 14) : ctx.rect(0, 0, 64, 64); ctx.fill();
+      ctx.strokeStyle = '#fff'; ctx.lineWidth = 7; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      ctx.beginPath(); ctx.moveTo(25, 17); ctx.lineTo(21, 46); ctx.lineTo(43, 46); ctx.stroke();
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 40px "Trebuchet MS", Tahoma, sans-serif';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('LucasOS', 80, 32);
+      ctx.fillStyle = '#ff7a12';
+      ctx.font = 'italic bold 20px "Trebuchet MS", Tahoma, sans-serif';
+      ctx.fillText('xp', 80 + ctx.measureText('LucasOS').width * 2 + 6, 18);
+      ctx.restore();
+    };
+  }
+  const loop = ts => { if (!saverOn) return; draw(ts); saverRaf = requestAnimationFrame(loop); };
+  saverRaf = requestAnimationFrame(loop);
+}
+function stopSaver() {
+  saverOn = false;
+  cancelAnimationFrame(saverRaf);
+  saverCanvas.hidden = true;
+}
+
+/* ============================================================
+   BUSCA (usada pelo Executar)
+   ============================================================ */
+function searchIndex(q) {
+  const nq = norm(q.trim());
+  if (!nq) return [];
+  const toks = nq.split(/\s+/);
+  const items = [];
+  APPS.forEach(a => items.push({ title: a.title, sub: a.win && a.win !== a.title ? a.win : 'Programa', icon: a.icon, words: `${a.id} ${a.title} ${a.win || ''} ${a.keys || ''}`, run: () => openApp(a.id) }));
+  $$('[data-app="projetos"] .ex-item').forEach(it => {
+    const name = it.querySelector('.ex-name').textContent;
+    const href = it.dataset.site || it.dataset.code;
+    items.push({ title: name, sub: 'Projeto: ' + it.querySelector('.ex-c3').textContent, icon: 'folder', words: `${name} ${it.querySelector('.ex-c2').textContent} ${it.querySelector('.ex-desc').textContent}`, run: () => window.open(href, '_blank', 'noopener') });
+  });
+  [['tema azul', 'Esquema de cores Azul', () => { setSetting('theme', 'xp'); setSetting('scheme', 'azul'); }],
+   ['tema verde-oliva', 'Esquema de cores Verde-oliva', () => { setSetting('theme', 'xp'); setSetting('scheme', 'oliva'); }],
+   ['tema prateado', 'Esquema de cores Prateado', () => { setSetting('theme', 'xp'); setSetting('scheme', 'prateado'); }],
+   ['tema vista', 'Visual do Windows Vista', () => setSetting('theme', 'vista')],
+   ['fazer logoff', 'Sair da sessão', () => exitDialog('logoff')],
+   ['desligar', 'Desligar o computador', () => exitDialog('shutdown')],
+   ['proteção de tela', 'Mostrar agora', () => startSaver(settings.saver === 'nenhuma' ? 'logo' : settings.saver)],
+  ].forEach(([title, sub, run]) => items.push({ title, sub, icon: 'display', words: title + ' ' + sub, run }));
+  return items
+    .map(it => {
+      const words = norm(it.words).split(/[^a-z0-9*]+/).filter(Boolean);
+      if (!toks.every(t => words.some(w => w.startsWith(t)))) return null;
+      const nt = norm(it.title);
+      return { it, s: (nt === nq ? 20 : nt.startsWith(nq) ? 10 : 0) + (it.sub === 'Programa' || APP[norm(it.title)] ? 2 : 0) };
+    })
+    .filter(Boolean).sort((a, b) => b.s - a.s).slice(0, 8).map(x => x.it);
+}
+
+/* ============================================================
+   API PÚBLICA (para apps.js)
    ============================================================ */
 const API = {
-  config: CONFIG,
-  apps: APPS,
-  bootTime: Date.now(),
-  store, sfx, toast, icon, settings, showModal,
+  config: CONFIG, apps: APPS, bootTime: Date.now(), store, sfx, settings, icon,
   register(id, fn) { inits[id] = fn; },
   open: openApp,
   close(id) { const w = wins.get(id); if (w) closeWin(w); },
   isVisible(id) { const w = wins.get(id); return !!(w && w.open && !w.min); },
   isActive(id) { return !!(activeWin && activeWin.id === id && !activeWin.min); },
-  setSetting,
-  setCustomWallpaper,
+  setSetting, applySettings, setCustomWallpaper, msgbox, balloon, copyText, searchIndex, exitDialog,
+  previewSaver(kind) { startSaver(kind === 'nenhuma' ? 'logo' : kind); },
+  isBinEmpty: () => binEmpty,
+  setBinEmpty(v) { binEmpty = v; store.set('bin-empty', v); renderIcons(); renderStart(); },
 };
 window.LucasOS = API;
 
@@ -857,47 +1029,68 @@ window.LucasOS = API;
    ============================================================ */
 function openBootWindows() {
   const hr = hostRect();
-  const iconsRight = $('#icons').getBoundingClientRect().right + 18;
-  const widgets = $('.widgets');
-  const widgetsLeft = widgets && widgets.offsetParent ? widgets.getBoundingClientRect().left - 18 : hr.width - 18;
+  const iconsRight = Math.max(...$$('.dicon:not(.corner)').map(d => d.getBoundingClientRect().right), 100) + 14;
   const proj = wins.get('projetos'), sobre = wins.get('sobre');
-  const pw = Math.min(+proj.el.dataset.w, hr.width - 24);
-  place(proj, { x: Math.max(iconsRight + 160, widgetsLeft - pw), y: 70 });
-  place(sobre, { x: iconsRight, y: 24 });
+  const pw = Math.min(+proj.el.dataset.w, hr.width - 16);
+  place(proj, { x: Math.max(iconsRight + 170, hr.width - pw - 30), y: 64 });
+  place(sobre, { x: iconsRight, y: 18 });
   openApp('projetos', { silent: true });
   openApp('sobre', { silent: true });
 }
-
+function startDesktop(delayBalloon) {
+  const hashId = location.hash.slice(1);
+  const deep = APP[hashId] && !APP[hashId].href ? hashId : null;
+  if (!isMobile()) openBootWindows();
+  if (deep) openApp(deep, { silent: true });
+  if (!store.get('seen-xp', false)) {
+    store.set('seen-xp', true);
+    setTimeout(() => balloon({
+      title: 'Bem-vindo ao LucasOS',
+      text: isMobile()
+        ? 'Toque em um ícone para abrir. O botão iniciar tem todos os programas.'
+        : 'Dê dois cliques em um ícone para abrir. O botão iniciar tem todos os programas, e Ctrl+K abre o Executar.',
+    }), delayBalloon);
+  }
+  resetIdle();
+}
 function boot() {
   $$('#windows .window').forEach(buildWindow);
   renderIcons();
-  setupProjects();
-  setupCompose();
   renderStart();
   applySettings();
   tick();
   setTimeout(() => { tick(); setInterval(tick, 60000); }, (60 - new Date().getSeconds()) * 1000);
+  $$('img[data-userpic]').forEach(img => img.addEventListener('error', () => {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 48 48');
+    svg.style.cssText = 'width:100%;height:100%;display:block';
+    svg.innerHTML = '<use href="#x-userpic"/>';
+    img.replaceWith(svg);
+  }, { once: true }));
 
   const bootEl = $('#boot');
-  const quickBoot = root.classList.contains('no-boot');
-  if (bootEl) {
-    if (quickBoot) bootEl.remove();
-    else bootEl.addEventListener('animationend', e => { if (e.animationName === 'boot-out') bootEl.remove(); });
-  }
+  const quick = root.classList.contains('no-boot');
   try { sessionStorage.setItem('lucasos:booted', '1'); } catch { /* ok */ }
+  if (quick) { bootEl.remove(); startDesktop(900); return; }
 
+  // Boot (tela preta) -> "bem-vindo" -> área de trabalho. Um clique pula tudo.
+  let done = false;
+  const finish = () => {
+    if (done) return; done = true;
+    bootEl.remove();
+    hideSession();
+    startDesktop(1400);
+  };
+  const skip = () => finish();
+  bootEl.addEventListener('pointerdown', skip);
+  session.addEventListener('pointerdown', function once(e) { if (session.dataset.mode === 'welcome' && !done) { session.removeEventListener('pointerdown', once); skip(); } });
   setTimeout(() => {
-    const hashId = location.hash.slice(1);
-    const deepLink = APP[hashId] && !APP[hashId].href ? hashId : null;
-    if (!isMobile()) openBootWindows();
-    if (deepLink) openApp(deepLink, { silent: true });
-    if (!store.get('seen-v2', false)) {
-      store.set('seen-v2', true);
-      setTimeout(() => toast(isMobile()
-        ? 'Bem-vindo ao LucasOS! Toque em um ícone para abrir. A paleta na barra troca o tema.'
-        : 'Bem-vindo ao LucasOS 2.0! Ctrl+K busca tudo, e a paleta na barra troca o tema (XP e Vista incluídos).', 'sparkles', 7000), 700);
-    }
-  }, quickBoot ? 0 : 1050);
+    if (done) return;
+    showSession('welcome', 'bem-vindo');
+    bootEl.classList.add('is-out');
+    setTimeout(() => { if (!done) bootEl.style.display = 'none'; }, 500);
+    setTimeout(finish, 1300);
+  }, 1500);
 }
 
 // Scripts "defer" rodam antes do DOMContentLoaded: esperar garante que apps.js já se registrou.
