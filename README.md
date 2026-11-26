@@ -114,7 +114,7 @@ Para rodar localmente, sirva a pasta com qualquer servidor estático (por exempl
 O mesmo conteúdo também está num site tradicional, no repositório [`lucas-melo`](https://github.com/LucassTml/lucas-melo):
 
 - **[Versão moderna](https://lucasstml.github.io/lucas-melo/):** preta, minimalista e com animações, incluindo os visualizadores de algoritmos.
-- **[Currículo, edição 1996](https://lucasstml.github.io/lucas-melo/curriculo/):** meu currículo como uma home page dos anos 90, em HTML 3.2 sem CSS nem JavaScript.
+- **[Currículo, edição 1996](https://lucasstml.github.io/lucas-melo/curriculo/):** meu currículo numa página pessoal à moda antiga, em HTML simples e sem JavaScript.
 
 Os dois também aparecem como ícones na área de trabalho e no menu Iniciar.
 
