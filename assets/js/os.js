@@ -14,6 +14,9 @@ const CONFIG = {
   githubUser: 'LucassTml',
   githubUrl: 'https://github.com/LucassTml',
   linkedinUrl: 'https://www.linkedin.com/in/lucas-eduardo-melo-tenorio-05326a311/',
+  // A versão tradicional do portfólio e o currículo em HTML de 1996 (repositório lucas-melo).
+  modernUrl: 'https://lucasstml.github.io/lucas-melo/',
+  cvUrl: 'https://lucasstml.github.io/lucas-melo/curriculo/',
   email: 'lemt99@gmail.com',
 };
 
@@ -26,6 +29,8 @@ const APPS = [
   { id: 'trajetoria', title: 'Trajetória', icon: 'cap', desk: 1, tip: 'Faculdade, cursos e experiências.', keys: 'formacao curriculo upe rocketlab visagio' },
   { id: 'github', title: 'GitHub', win: 'GitHub: LucassTml - Navegador', icon: 'github', desk: 1, tip: 'Meu perfil e meus repositórios, carregados ao vivo.', keys: 'navegador internet repositorios' },
   { id: 'linkedin', title: 'LinkedIn', icon: 'linkedin', desk: 1, href: CONFIG.linkedinUrl, tip: 'Abre meu LinkedIn em uma nova aba.', keys: 'perfil profissional' },
+  { id: 'moderno', title: 'Site moderno', icon: 'globe', desk: 1, href: CONFIG.modernUrl, tip: 'A versão tradicional deste portfólio: preta, minimalista e com animações.', keys: 'portfolio site moderno tradicional versao web' },
+  { id: 'curriculo', title: 'Currículo.htm', icon: 'doc', desk: 1, href: CONFIG.cvUrl, tip: 'Meu currículo como uma página de 1996, em HTML puro.', keys: 'cv curriculo resume html 1996 retro' },
   { id: 'contato', title: 'Contato', win: 'Nova mensagem', icon: 'mail', desk: 1, tip: 'E-mail, telefone e um jeito rápido de me escrever.', keys: 'email mensagem telefone' },
   { id: 'terminal', title: 'Prompt de Comando', icon: 'cmd', desk: 1, tip: 'Digite help para ver os comandos.', keys: 'cmd terminal console shell' },
   { id: 'invaders', title: 'Invasores', icon: 'invader', desk: 1, group: 'jogos', tip: 'Jogo de nave com três fases e power-ups.', keys: 'jogo game nave' },
@@ -724,7 +729,7 @@ function renderStart() {
   $('#sm-right').innerHTML =
     smItem('projetos', { bold: true }) + smItem('trajetoria', { bold: true }) + smItem('habilidades', { bold: true }) + smItem('sistema', { bold: true }) +
     '<div class="sm-sep"></div>' +
-    smItem('video', { label: 'Painel de controle' }) + smItem('linkedin') + smItem('lixeira') +
+    smItem('video', { label: 'Painel de controle' }) + smItem('linkedin') + smItem('moderno') + smItem('curriculo') + smItem('lixeira') +
     '<div class="sm-sep"></div>' +
     smItem('ajuda') + smItem('executar', { label: 'Executar...' });
   const prog = id => { const a = APP[id]; return a.href
@@ -734,7 +739,7 @@ function renderStart() {
   allProg.innerHTML =
     group('Acessórios', ['sobre', 'terminal', 'ordenacao', 'labirinto', 'executar']) +
     group('Jogos', ['invaders', 'hexagon']) +
-    '<hr>' + ['github', 'linkedin', 'contato', 'projetos', 'trajetoria', 'habilidades', 'sistema', 'ajuda'].map(prog).join('');
+    '<hr>' + ['github', 'linkedin', 'moderno', 'curriculo', 'contato', 'projetos', 'trajetoria', 'habilidades', 'sistema', 'ajuda'].map(prog).join('');
 }
 function openStart() {
   closeMenus();

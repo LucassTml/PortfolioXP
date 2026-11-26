@@ -33,6 +33,8 @@ Tudo foi feito com **HTML, CSS e JavaScript puros**, sem biblioteca, framework o
 | 🎓 | **Trajetória** | UPE, RocketLab 2026.2 (Visagio) e formação, em modo de exibição "Detalhes" |
 | 🐙 | **GitHub** | Navegador com meu perfil e meus repositórios, carregados ao vivo pela API do GitHub |
 | in | **LinkedIn** | Atalho para o meu perfil |
+| 🌐 | **Site moderno** | Atalho para a versão tradicional do portfólio |
+| 📄 | **Currículo.htm** | Atalho para o meu currículo em HTML de 1996 |
 | ✉️ | **Contato** | "Nova mensagem" que abre seu programa de e-mail, mais telefone e links |
 | `>_` | **Prompt de Comando** | Terminal com comandos, histórico e autocompletar |
 | 👾 | **Invasores** | Jogo de nave com três fases, power-ups e recorde |
@@ -106,6 +108,15 @@ Para mudar alguma coisa:
 | `style.css` → `[data-scheme="..."]` | Cores de cada esquema |
 
 Para rodar localmente, sirva a pasta com qualquer servidor estático (por exemplo `python -m http.server`) e abra `http://localhost:8000`.
+
+## Outras versões
+
+O mesmo conteúdo também está num site tradicional, no repositório [`lucas-melo`](https://github.com/LucassTml/lucas-melo):
+
+- **[Versão moderna](https://lucasstml.github.io/lucas-melo/):** preta, minimalista e com animações, incluindo os visualizadores de algoritmos.
+- **[Currículo, edição 1996](https://lucasstml.github.io/lucas-melo/curriculo/):** meu currículo como uma home page dos anos 90, em HTML 3.2 sem CSS nem JavaScript.
+
+Os dois também aparecem como ícones na área de trabalho e no menu Iniciar.
 
 ## Versões anteriores
 

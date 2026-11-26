@@ -533,6 +533,8 @@ OS.register('terminal', win => {
       rich(['  e-mail    ', link(OS.config.email, 'mailto:' + OS.config.email)]);
       rich(['  linkedin  ', link('lucas-eduardo-melo-tenorio', OS.config.linkedinUrl)]);
       rich(['  github    ', link(OS.config.githubUser, OS.config.githubUrl)]);
+      rich(['  site      ', link('lucasstml.github.io/lucas-melo', OS.config.modernUrl)]);
+      rich(['  currículo ', link('lucasstml.github.io/lucas-melo/curriculo', OS.config.cvUrl)]);
     } },
     neofetch: { desc: 'Ficha técnica do sistema.', run: neofetch },
     dir: { desc: 'Lista os programas desta pasta.', run: dir },
